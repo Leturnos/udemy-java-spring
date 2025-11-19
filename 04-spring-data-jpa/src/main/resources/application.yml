@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: spring-boot
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3308/spring_boot?useTimezone=true&serverTimezone=UTC
+    username: root
+    #     Sei que é uma má prática deixar senha exposta
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+#        dialect: org.hibernate.dialect.MySQLDialect
+      show-sql: false
+    open-in-view: false
