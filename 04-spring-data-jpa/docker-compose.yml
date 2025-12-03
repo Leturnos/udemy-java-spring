@@ -1,7 +1,7 @@
 services:
   mysql:
-    image: mysql:latest
-    container_name: udemy_spring_boot
+    image: mysql:9.4
+#    container_name: udemy_spring_boot
     restart: always
     environment:
 #     Sei que é uma má prática deixar senha exposta
