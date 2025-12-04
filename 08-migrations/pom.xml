@@ -68,6 +68,32 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <configuration>
+                    <url>jdbc:mysql://localhost:3308/spring_boot?useTimezone=trueserver&amp;Timezone=UTC</url>
+                    <user>root</user>
+                    <!--sei que é má prática deixar senha exposta-->
+                    <password>root</password>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.mysql</groupId>
+                        <artifactId>mysql-connector-j</artifactId>
+                        <version>9.4.0</version>
+                        <!--“O Spring Boot traz sua própria implementação de logging,
+                        enquanto o Flyway e o MySQL usam SLF4J diretamente.
+                        Para evitar conflito de bibliotecas de log no classpath, é necessário usar exclusions.”                        -->
+                        <exclusions>
+                            <exclusion>
+                                <groupId>org.slf4j</groupId>
+                                <artifactId>slf4j-api</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+            </plugin>
 		</plugins>
 	</build>
 
