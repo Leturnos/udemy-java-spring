@@ -2,6 +2,7 @@ package com.udemy.spring_boot.services;
 
 import com.udemy.spring_boot.controllers.PersonController;
 import com.udemy.spring_boot.data.dto.PersonDTO;
+import com.udemy.spring_boot.exception.RequiredObjectIsNullException;
 import com.udemy.spring_boot.exception.ResourceNotFoundException;
 import static com.udemy.spring_boot.mapper.ObjectMapper.parseObject;
 import static com.udemy.spring_boot.mapper.ObjectMapper.parseListObjects;
@@ -29,6 +30,9 @@ public class PersonServices {
     PersonRepository personRepository;
 
     public PersonDTO create(PersonDTO person) {
+
+        if (person == null) throw new RequiredObjectIsNullException();
+
         logger.info("creating one person");
 
         var entity = parseObject(person, Person.class);
@@ -55,6 +59,9 @@ public class PersonServices {
     }
 
     public PersonDTO update(PersonDTO person) {
+
+        if (person == null) throw new RequiredObjectIsNullException();
+
         logger.info("updating one person");
         Person entity = personRepository.findById(person.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this id"));
