@@ -20,3 +20,7 @@ spring:
       # níveis: TRACE, DEBUG, WARN, INFO
 #      root: WARN
       com.udemy.spring_boot: DEBUG
+  spring-doc:
+    paths-to-match: /api/**/v1/** # ** substitui o nome do controller e o id
+    swagger-ui:
+      use-root-path: true
