@@ -23,7 +23,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Service
 public class BookServices {
 
-    private final AtomicLong counter = new AtomicLong();
     private Logger logger = LoggerFactory.getLogger(BookServices.class.getName());
 
     @Autowired
@@ -62,12 +61,12 @@ public class BookServices {
 
         if (book == null) throw new RequiredObjectIsNullException();
 
-        logger.info("updating one person");
+        logger.info("updating one book");
         Book entity = bookRepository.findById(book.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this id"));
 
         entity.setAuthor(book.getAuthor());
-        entity.setLaunch_date(book.getLaunchDate());
+        entity.setLaunchDate(book.getLaunchDate());
         entity.setPrice(book.getPrice());
         entity.setTitle(book.getTitle());
         var dto = parseObject(bookRepository.save(entity), BookDTO.class);
