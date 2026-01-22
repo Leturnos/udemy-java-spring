@@ -92,7 +92,7 @@
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
                 <configuration>
-                    <url>jdbc:mysql://localhost:3308/spring_boot_challenge_1?useTimezone=trueserver&amp;Timezone=UTC</url>
+                    <url>jdbc:mysql://localhost:3308/spring_boot_challenge_2?useTimezone=trueserver&amp;Timezone=UTC</url>
                     <user>root</user>
                     <!--sei que é má prática deixar senha exposta-->
                     <password>root</password>
