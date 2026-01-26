@@ -1,4 +1,4 @@
-package com.udemy.spring_boot.unitetests.mapper.mocks;
+package com.udemy.spring_boot.unittests.mapper.mocks;
 
 import com.udemy.spring_boot.data.dto.BookDTO;
 import com.udemy.spring_boot.model.Book;

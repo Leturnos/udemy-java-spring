@@ -1,10 +1,10 @@
-package com.udemy.spring_boot.services;
+package com.udemy.spring_boot.unittests.services;
 
 import com.udemy.spring_boot.data.dto.BookDTO;
 import com.udemy.spring_boot.exception.RequiredObjectIsNullException;
 import com.udemy.spring_boot.model.Book;
 import com.udemy.spring_boot.repository.BookRepository;
-import com.udemy.spring_boot.unitetests.mapper.mocks.MockBook;
+import com.udemy.spring_boot.unittests.mapper.mocks.MockBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;

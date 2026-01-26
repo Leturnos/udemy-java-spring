@@ -1,10 +1,10 @@
-package com.udemy.spring_boot.services;
+package com.udemy.spring_boot.unittests.services;
 
 import com.udemy.spring_boot.data.dto.PersonDTO;
 import com.udemy.spring_boot.exception.RequiredObjectIsNullException;
 import com.udemy.spring_boot.model.Person;
 import com.udemy.spring_boot.repository.PersonRepository;
-import com.udemy.spring_boot.unitetests.mapper.mocks.MockPerson;
+import com.udemy.spring_boot.unittests.mapper.mocks.MockPerson;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
