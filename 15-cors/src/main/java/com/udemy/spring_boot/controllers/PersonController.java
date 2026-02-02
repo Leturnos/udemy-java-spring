@@ -30,7 +30,7 @@ public class PersonController implements PersonControllerDocs { // A documentaç
         return personServices.findAll();
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+    //@CrossOrigin(origins = "http://localhost:8080")
     @GetMapping(value = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE,
@@ -41,7 +41,7 @@ public class PersonController implements PersonControllerDocs { // A documentaç
         return personServices.findById(id);
     }
 
-    @CrossOrigin(origins = {"http://localhost:8080", "https://www.google.com"})
+    //@CrossOrigin(origins = {"http://localhost:8080", "https://www.google.com"})
     @PostMapping(
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
