@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: spring-boot
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3308/spring_boot?useTimezone=true&serverTimezone=UTC
+    username: root
+    #     Sei que é uma má prática deixar senha exposta
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: none # Precisa desabilitar para usar migration
+    properties:
+      hibernate:
+#        dialect: org.hibernate.dialect.MySQLDialect
+      show-sql: false
+    open-in-view: false
+  logging:
+    level:
+      # níveis: TRACE, DEBUG, WARN, INFO
+#      root: WARN
+      com.udemy.spring_boot: DEBUG
+  springdoc:
+    paths-to-match: /api/**/v1/** # ** substitui o nome do controller e o id
+    swagger-ui:
+      use-root-path: true
