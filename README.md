@@ -58,3 +58,10 @@ mvn spring-boot:run
 - Testes: JUnit 5, Mockito e Mockito Extension
 
 - Containerização: Docker
+
+---
+
+## 📒 Observações
+
+Podem existir pequenas inconsistências de nomenclatura (ex.: Person / People, Book / Books) devido ao desenvolvimento incremental ao longo das seções do curso.
+Essas diferenças não afetam o funcionamento das APIs e foram mantidas para preservar o histórico de evolução do projeto.
