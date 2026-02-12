@@ -1,10 +1,13 @@
 package com.udemy.spring_boot.integrationtests.dto;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 // Até poderia herdar esse DTO da aplicação,
 // mas fazendo dessa forma é mais fácil personalizar
+@XmlRootElement(name = "person")
 public class PersonDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
