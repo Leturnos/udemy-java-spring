@@ -1,0 +1,53 @@
+### Build Artifacts ###
+# Maven
+target/
+pom.xml.tag
+pom.xml.versions
+pom.xml.next
+release.properties
+dependency-check-report.html
+dependency-check-report.json
+dependency-check-report.xml
+
+# Package files (jar, war, zip, etc.)
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+### Spring Boot ###
+# IDE temp files
+.apt_generated/
+.factorypath
+.springBeans
+
+### IDE and OS Files ###
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse
+.classpath
+.project
+.settings
+bin/
+tmp/
+.vscode/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+### Docker ###
+
+database/
+
+# Logs e arquivos de cache
+logs/
+*.log
+log.txt
