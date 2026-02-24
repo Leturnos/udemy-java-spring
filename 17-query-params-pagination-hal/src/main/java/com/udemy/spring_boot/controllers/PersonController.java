@@ -5,11 +5,12 @@ import com.udemy.spring_boot.data.dto.PersonDTO;
 import com.udemy.spring_boot.services.PersonServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,15 +24,13 @@ public class PersonController implements PersonControllerDocs { // A documentaç
     @Autowired // para não precisa do "= new PersonServices();"
     private PersonServices personServices;
 
-    // OBS: Retornar Page<PersonDTO> diretamente gera um warning do Spring sobre a instabilidade da serialização do PageImpl.
-    // Em produção, o ideal é usar PagedModel ou um DTO de resposta customizado para garantir um contrato de API estável.
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE}
     )
     @Override
-    public ResponseEntity<Page<PersonDTO>> findAll(
+    public ResponseEntity<PagedModel<EntityModel<PersonDTO>>> findAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "12") Integer size,
             @RequestParam(value = "direction", defaultValue = "asc") String direction

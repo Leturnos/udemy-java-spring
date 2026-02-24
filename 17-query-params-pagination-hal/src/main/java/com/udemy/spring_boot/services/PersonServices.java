@@ -5,7 +5,6 @@ import com.udemy.spring_boot.data.dto.PersonDTO;
 import com.udemy.spring_boot.exception.RequiredObjectIsNullException;
 import com.udemy.spring_boot.exception.ResourceNotFoundException;
 import static com.udemy.spring_boot.mapper.ObjectMapper.parseObject;
-import static com.udemy.spring_boot.mapper.ObjectMapper.parseListObjects;
 import com.udemy.spring_boot.model.Person;
 import com.udemy.spring_boot.repository.PersonRepository;
 import jakarta.transaction.Transactional;
@@ -15,9 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -32,6 +34,9 @@ public class PersonServices {
     @Autowired
     PersonRepository personRepository;
 
+    @Autowired
+    PagedResourcesAssembler<PersonDTO> assembler;
+
     public PersonDTO create(PersonDTO person) {
 
         if (person == null) throw new RequiredObjectIsNullException();
@@ -44,7 +49,7 @@ public class PersonServices {
         return dto;
     }
 
-    public Page<PersonDTO> findAll(Pageable pageable) {
+    public PagedModel<EntityModel<PersonDTO>> findAll(Pageable pageable) {
         logger.info("finding all people");
 
         var people = personRepository.findAll(pageable);
@@ -54,7 +59,15 @@ public class PersonServices {
             return dto;
         });
 
-        return peopleWithLinks;
+        Link findAllLink = WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(PersonController.class)
+                        .findAll(
+                            pageable.getPageNumber(),
+                            pageable.getPageSize(),
+                            String.valueOf(pageable.getSort())))
+                .withSelfRel();
+
+        return assembler.toModel(peopleWithLinks, findAllLink);
     }
 
     public PersonDTO findById(Long id) {
