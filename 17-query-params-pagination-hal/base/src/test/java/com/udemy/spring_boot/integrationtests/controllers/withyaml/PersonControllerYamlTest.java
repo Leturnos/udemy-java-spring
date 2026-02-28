@@ -3,6 +3,7 @@ package com.udemy.spring_boot.integrationtests.controllers.withyaml;
 import com.udemy.spring_boot.config.TestConfigs;
 import com.udemy.spring_boot.integrationtests.controllers.withyaml.mapper.YAMLMapper;
 import com.udemy.spring_boot.integrationtests.dto.PersonDTO;
+import com.udemy.spring_boot.integrationtests.dto.Wrapper.PersonPagedModel;
 import com.udemy.spring_boot.integrationtests.testcontainer.AbstractIntegrationTest;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.EncoderConfig;
@@ -16,7 +17,6 @@ import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -203,6 +203,7 @@ class PersonControllerYamlTest extends AbstractIntegrationTest {
 
         var response = given(specification)
                 .accept(MediaType.APPLICATION_YAML_VALUE)
+                .queryParam("page", 5, "size", 12, "direction", "desc")
                 .when()
                 .get()
                 .then()
@@ -210,20 +211,31 @@ class PersonControllerYamlTest extends AbstractIntegrationTest {
                 .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                 .body()
-                .as(PersonDTO[].class, objectMapper);
+                .as(PersonPagedModel.class, objectMapper);
 
-        List<PersonDTO> people = Arrays.asList(response);
+        List<PersonDTO> people = response.getContent();
 
         PersonDTO personOne = people.get(0);
 
         assertNotNull(personOne.getId());
         assertTrue(personOne.getId() > 0);
 
-        assertEquals("Leandro", personOne.getFirstName());
-        assertEquals("Pereira", personOne.getLastName());
-        assertEquals("Moradas do Bosque", personOne.getAddress());
+        assertEquals("Anton", personOne.getFirstName());
+        assertEquals("Rollo", personOne.getLastName());
+        assertEquals("8 Norway Maple Lane", personOne.getAddress());
         assertEquals("Male", personOne.getGender());
-        assertTrue(personOne.getEnabled());
+        assertFalse(personOne.getEnabled());
+
+        PersonDTO personten = people.get(9);
+
+        assertNotNull(personten.getId());
+        assertTrue(personten.getId() > 0);
+
+        assertEquals("Arlena", personten.getFirstName());
+        assertEquals("Servante", personten.getLastName());
+        assertEquals("35162 Mayer Pass", personten.getAddress());
+        assertEquals("Female", personten.getGender());
+        assertFalse(personten.getEnabled());
     }
 
     private void mockPerson() {

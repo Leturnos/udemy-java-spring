@@ -1,10 +1,10 @@
 package com.udemy.spring_boot.integrationtests.controllers.withxml;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.udemy.spring_boot.config.TestConfigs;
 import com.udemy.spring_boot.integrationtests.dto.PersonDTO;
+import com.udemy.spring_boot.integrationtests.dto.Wrapper.PersonPagedModel;
 import com.udemy.spring_boot.integrationtests.testcontainer.AbstractIntegrationTest;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -188,6 +188,7 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
 
         var bodyContent = given(specification)
                 .accept(MediaType.APPLICATION_XML_VALUE)
+                .queryParam("page", 5, "size", 12, "direction", "desc")
                 .when()
                 .get()
                 .then()
@@ -197,18 +198,30 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
                 .body()
                 .asString();
 
-        List<PersonDTO> people = objectMapper.readValue(bodyContent, new TypeReference<List<PersonDTO>>() {});
+        PersonPagedModel wrapper = objectMapper.readValue(bodyContent, PersonPagedModel.class);
+        List<PersonDTO> people = wrapper.getContent();
 
         PersonDTO personOne = people.get(0);
 
         assertNotNull(personOne.getId());
         assertTrue(personOne.getId() > 0);
 
-        assertEquals("Leandro", personOne.getFirstName());
-        assertEquals("Pereira", personOne.getLastName());
-        assertEquals("Moradas do Bosque", personOne.getAddress());
+        assertEquals("Anton", personOne.getFirstName());
+        assertEquals("Rollo", personOne.getLastName());
+        assertEquals("8 Norway Maple Lane", personOne.getAddress());
         assertEquals("Male", personOne.getGender());
-        assertTrue(personOne.getEnabled());
+        assertFalse(personOne.getEnabled());
+
+        PersonDTO personten = people.get(9);
+
+        assertNotNull(personten.getId());
+        assertTrue(personten.getId() > 0);
+
+        assertEquals("Arlena", personten.getFirstName());
+        assertEquals("Servante", personten.getLastName());
+        assertEquals("35162 Mayer Pass", personten.getAddress());
+        assertEquals("Female", personten.getGender());
+        assertFalse(personten.getEnabled());
     }
 
     private void mockPerson() {
