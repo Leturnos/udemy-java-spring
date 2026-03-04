@@ -226,16 +226,16 @@ class PersonControllerYamlTest extends AbstractIntegrationTest {
         assertEquals("Male", personOne.getGender());
         assertFalse(personOne.getEnabled());
 
-        PersonDTO personten = people.get(9);
+        PersonDTO personTen = people.get(9);
 
-        assertNotNull(personten.getId());
-        assertTrue(personten.getId() > 0);
+        assertNotNull(personTen.getId());
+        assertTrue(personTen.getId() > 0);
 
-        assertEquals("Arlena", personten.getFirstName());
-        assertEquals("Servante", personten.getLastName());
-        assertEquals("35162 Mayer Pass", personten.getAddress());
-        assertEquals("Female", personten.getGender());
-        assertFalse(personten.getEnabled());
+        assertEquals("Arlena", personTen.getFirstName());
+        assertEquals("Servante", personTen.getLastName());
+        assertEquals("35162 Mayer Pass", personTen.getAddress());
+        assertEquals("Female", personTen.getGender());
+        assertFalse(personTen.getEnabled());
     }
 
     @Test
