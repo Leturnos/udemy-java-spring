@@ -224,6 +224,49 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
         assertFalse(personten.getEnabled());
     }
 
+    @Test
+    @Order(7)
+    void findByNameTest() throws JsonProcessingException {
+
+        var content = given(specification)
+                .accept(MediaType.APPLICATION_XML_VALUE)
+                .pathParam("firstName", "and")
+                .queryParams("page", 0, "size", 12, "direction", "asc")
+                .when()
+                .get("findPeopleByName/{firstName}")
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .extract()
+                .body()
+                .asString();
+
+        PersonPagedModel wrapper = objectMapper.readValue(content, PersonPagedModel.class);
+        List<PersonDTO> people = wrapper.getContent();
+
+        PersonDTO personOne = people.get(0);
+
+        assertNotNull(personOne.getId());
+        assertTrue(personOne.getId() > 0);
+
+        assertEquals("Alessandro", personOne.getFirstName());
+        assertEquals("McFaul", personOne.getLastName());
+        assertEquals("5 Lukken Plaza", personOne.getAddress());
+        assertEquals("Male", personOne.getGender());
+        assertTrue(personOne.getEnabled());
+
+        PersonDTO personFive = people.get(4);
+
+        assertNotNull(personFive.getId());
+        assertTrue(personFive.getId() > 0);
+
+        assertEquals("Brandyn", personFive.getFirstName());
+        assertEquals("Grasha", personFive.getLastName());
+        assertEquals("96 Mosinee Parkway", personFive.getAddress());
+        assertEquals("Male", personFive.getGender());
+        assertTrue(personFive.getEnabled());
+    }
+
     private void mockPerson() {
         person.setFirstName("Linus");
         person.setLastName("Torvalds");
