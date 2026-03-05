@@ -1,5 +1,7 @@
 cors:
   originPatterns: http://localhost:8080,http://localhost:3000,https://www.google.com
+file:
+  upload-dir: Programacao/udemy-java-spring/upload-dir
 spring:
   application:
     name: spring-boot
@@ -17,12 +19,18 @@ spring:
 #        dialect: org.hibernate.dialect.MySQLDialect
       show-sql: false
     open-in-view: false
-  logging:
-    level:
-      # níveis: TRACE, DEBUG, WARN, INFO
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 224MB
+logging:
+  level:
+    # níveis: TRACE, DEBUG, WARN, INFO
 #      root: WARN
-      com.udemy.spring_boot: DEBUG
-  springdoc:
-    paths-to-match: /api/**/v1/** # ** substitui o nome do controller e o id
-    swagger-ui:
-      use-root-path: true
+    com.udemy.spring_boot: DEBUG
+springdoc:
+  paths-to-match: /api/**/v1/** # ** substitui o nome do controller e o id
+  swagger-ui:
+    use-root-path: true

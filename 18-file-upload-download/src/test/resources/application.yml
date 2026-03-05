@@ -2,6 +2,8 @@ server:
   port: 8888 # porta de testes
 cors:
   originPatterns: http://localhost:8080,http://localhost:3000,https://www.google.com
+file:
+  upload-dir: Programacao/udemy-java-spring/upload-dir
 spring:
   application:
     name: spring-boot
@@ -15,10 +17,16 @@ spring:
       hibernate:
       show-sql: false
     open-in-view: false
-  logging:
-    level:
-      root: INFO
-  springdoc:
-    paths-to-match: /api/**/v1/**
-    swagger-ui:
-      use-root-path: true
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 224MB
+logging:
+  level:
+    root: INFO
+springdoc:
+  paths-to-match: /api/**/v1/**
+  swagger-ui:
+    use-root-path: true
