@@ -1,0 +1,13 @@
+services:
+  mysql:
+    image: mysql:9.4
+#    container_name: udemy_spring_boot
+    restart: always
+    environment:
+#     Sei que é uma má prática deixar senha exposta
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: spring_boot
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./database:/var/lib/mysql
