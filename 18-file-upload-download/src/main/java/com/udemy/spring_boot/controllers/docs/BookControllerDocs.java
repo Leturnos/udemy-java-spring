@@ -18,7 +18,7 @@ public interface BookControllerDocs {
 
     @Operation(summary = "Find All Book",
             description = "Finds All Book",
-            tags = {"Book"},
+            tags = {"Books"},
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -44,7 +44,7 @@ public interface BookControllerDocs {
 
     @Operation(summary = "Finds a Book",
             description = "Find a specific book by your ID",
-            tags = {"Book"},
+            tags = {"Books"},
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -62,7 +62,7 @@ public interface BookControllerDocs {
 
     @Operation(summary = "Adds a new Book",
             description = "Adds a new book by passing in a JSON, XML or YML representation of the book.",
-            tags = {"Book"},
+            tags = {"Books"},
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -78,7 +78,7 @@ public interface BookControllerDocs {
 
     @Operation(summary = "Updates a book's information",
             description = "Updates a book's information by passing in a JSON, XML or YML representation of the updated book.",
-            tags = {"Book"},
+            tags = {"Books"},
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -96,7 +96,7 @@ public interface BookControllerDocs {
 
     @Operation(summary = "Deletes a Book",
             description = "Deletes a specific book by their ID",
-            tags = {"Book"},
+            tags = {"Books"},
             responses = {
                     @ApiResponse(
                             description = "No Content",
