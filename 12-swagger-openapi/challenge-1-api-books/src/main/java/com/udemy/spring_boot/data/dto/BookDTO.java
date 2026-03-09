@@ -1,5 +1,7 @@
 package com.udemy.spring_boot.data.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.hateoas.Links;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
@@ -10,6 +12,7 @@ public class BookDTO extends RepresentationModel<BookDTO> implements Serializabl
 
     private static final long serialVersionUID = 1L;
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
     private String author;
     private Date launchDate;
@@ -79,5 +82,11 @@ public class BookDTO extends RepresentationModel<BookDTO> implements Serializabl
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    @Schema(hidden = true)
+    public Links getLinks() {
+        return super.getLinks();
     }
 }

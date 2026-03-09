@@ -92,7 +92,7 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    BookDTO update(@RequestBody BookDTO book);
+    BookDTO update(@PathVariable("id") Long id, @RequestBody BookDTO book);
 
     @Operation(summary = "Deletes a Book",
             description = "Deletes a specific book by their ID",

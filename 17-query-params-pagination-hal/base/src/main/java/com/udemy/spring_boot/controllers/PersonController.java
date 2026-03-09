@@ -79,11 +79,13 @@ public class PersonController implements PersonControllerDocs { // A documentaç
     }
 
     @PutMapping(
+            value = "/{id}",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
     )
     @Override
-    public PersonDTO update(@RequestBody PersonDTO person) {
+    public PersonDTO update(@PathVariable(value = "id") Long id, @RequestBody PersonDTO person) {
+        person.setId(id);
         return personServices.update(person);
     }
 

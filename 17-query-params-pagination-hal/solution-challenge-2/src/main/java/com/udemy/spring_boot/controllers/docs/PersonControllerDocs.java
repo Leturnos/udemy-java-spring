@@ -113,7 +113,7 @@ public interface PersonControllerDocs {
                     @ApiResponse(description = "Internal Server Eror", responseCode = "500", content = @Content)
             }
     )
-    PersonDTO update(@RequestBody PersonDTO person);
+    PersonDTO update(@PathVariable("id") Long id, @RequestBody PersonDTO person);
 
     @Operation(summary = "Disable a Person", description = "Find a specific person by your id",
             tags = {"People"},

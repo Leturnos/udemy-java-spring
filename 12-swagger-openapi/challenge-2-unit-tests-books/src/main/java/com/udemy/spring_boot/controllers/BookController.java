@@ -48,14 +48,16 @@ public class BookController implements BookControllerDocs { // A documentação 
         return bookServices.create(book);
     }
 
-    @PutMapping(
+    @PutMapping(value = "/{id}",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
     )
     @Override
-    public BookDTO update(@RequestBody BookDTO book) {
+    public BookDTO update(@PathVariable(value = "id") Long id, @RequestBody BookDTO book) {
+        book.setId(id);
         return bookServices.update(book);
     }
+
 
     @DeleteMapping(value = "/{id}")
     @Override

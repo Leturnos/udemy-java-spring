@@ -1,17 +1,18 @@
 package com.udemy.spring_boot.data.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.hateoas.Links;
 import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.core.Relation;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-@Relation(collectionRelation = "book")
 public class BookDTO extends RepresentationModel<BookDTO> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
     private String author;
     private Date launchDate;
@@ -70,5 +71,11 @@ public class BookDTO extends RepresentationModel<BookDTO> implements Serializabl
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getAuthor(), getLaunchDate(), getPrice(), getTitle());
+    }
+
+    @Override
+    @Schema(hidden = true)
+    public Links getLinks() {
+        return super.getLinks();
     }
 }

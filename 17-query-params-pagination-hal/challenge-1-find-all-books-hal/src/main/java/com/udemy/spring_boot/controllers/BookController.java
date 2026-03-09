@@ -64,6 +64,7 @@ public class BookController implements BookControllerDocs {
     }
 
     @PutMapping(
+            value = "/{id}",
             consumes = {
                     MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE,
@@ -74,10 +75,10 @@ public class BookController implements BookControllerDocs {
                     MediaType.APPLICATION_YAML_VALUE}
     )
     @Override
-    public BookDTO update(@RequestBody BookDTO book) {
+    public BookDTO update(@PathVariable(value = "id") Long id, @RequestBody BookDTO book) {
+        book.setId(id);
         return service.update(book);
     }
-
 
     @DeleteMapping(value = "/{id}")
     @Override

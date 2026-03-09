@@ -1,6 +1,8 @@
 package com.udemy.spring_boot.data.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import org.springframework.hateoas.Links;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
@@ -10,6 +12,7 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
 
     private static final long serialVersionUID = 1L;
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
     private String firstName;
     private String lastName;
@@ -69,5 +72,11 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    @Override
+    @Schema(hidden = true)
+    public Links getLinks() {
+        return super.getLinks();
     }
 }
