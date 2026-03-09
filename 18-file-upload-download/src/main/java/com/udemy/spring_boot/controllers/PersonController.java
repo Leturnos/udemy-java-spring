@@ -3,7 +3,6 @@ package com.udemy.spring_boot.controllers;
 import com.udemy.spring_boot.controllers.docs.PersonControllerDocs;
 import com.udemy.spring_boot.data.dto.PersonDTO;
 import com.udemy.spring_boot.services.PersonServices;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 // @CrossOrigin(origins = "http://localhost:8080") é uma opção para CORS
 @RestController
 @RequestMapping("/api/person/v1")
-@Tag(name = "People", description = "Endpoints for Managing People")
 public class PersonController implements PersonControllerDocs { // A documentação do Swaager fica na interface PersonControllerDocs
 
     @Autowired // para não precisa do "= new PersonServices();"

@@ -3,7 +3,6 @@ package com.udemy.spring_boot.controllers;
 import com.udemy.spring_boot.controllers.docs.BookControllerDocs;
 import com.udemy.spring_boot.data.dto.BookDTO;
 import com.udemy.spring_boot.services.BookServices;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,11 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/book/v1")
-@Tag(name = "Books", description = "Endpoints for Managing Book")
 public class BookController implements BookControllerDocs {
 
     @Autowired

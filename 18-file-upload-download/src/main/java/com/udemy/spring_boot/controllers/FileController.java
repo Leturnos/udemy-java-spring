@@ -27,27 +27,27 @@ public class FileController implements FileControllerDocs {
     @Autowired
     private FileStorageService service;
 
-    @PostMapping("/uploadFile")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
-    public UploadFileResponseDTO uploadFile(@RequestParam("file") MultipartFile file) {
+    public UploadFileResponseDTO uploadFile(@RequestPart("file") MultipartFile file) {
         String fileName = service.storeFile(file);
         var fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/files/v1/downloadFile/")
+                .path("/api/files/v1/")
                 .path(fileName)
                 .toUriString();
 
         return new UploadFileResponseDTO(fileName, fileDownloadUri, file.getContentType(), file.getSize());
     }
 
-    @PostMapping("/uploadMultipleFiles")
+    @PostMapping(value = "/multiple", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
-    public List<UploadFileResponseDTO> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
+    public List<UploadFileResponseDTO> uploadMultipleFiles(@RequestPart("files") MultipartFile[] files) {
         return Arrays.stream(files)
-                .map(file -> uploadFile(file))
+                .map(file -> uploadFile(file)) // acoplamento entre endpoints (vou manter por enquanto)
                 .toList();
     }
 
-    @GetMapping("/downloadFile/{fileName:.+}")
+    @GetMapping("/{fileName:.+}")
     @Override
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         Resource resource = service.loadFileAsResource(fileName);
@@ -56,7 +56,7 @@ public class FileController implements FileControllerDocs {
         try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
         } catch (Exception e) {
-            logger.error("Could not determine file type");
+            logger.error("Could not determine file type for file {}", fileName);
         }
 
         if (contentType == null) {

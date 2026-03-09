@@ -1,7 +1,7 @@
 {
   "info": {
-    "_postman_id": "354a7054-2373-4147-b485-05fcd4786339",
-    "name": "REST API's RESTful from 0 with Java, Spring Boot, Kubernetes and Docker",
+    "_postman_id": "c14dadd2-2a19-4d0f-b37d-20a13709b566",
+    "name": "REST API's RESTful from 0 with Java, Spring Boot, Kubernetes and Docker Copy 4",
     "description": "Spring Boot is amazing",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "47078944"
@@ -37,7 +37,7 @@
                   "variable": [
                     {
                       "key": "id",
-                      "value": "1305"
+                      "value": "7573"
                     }
                   ]
                 },
@@ -45,7 +45,7 @@
               },
               "response": [
                 {
-                  "name": "Sucess",
+                  "name": "Success",
                   "originalRequest": {
                     "method": "GET",
                     "header": [
@@ -68,7 +68,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -83,7 +83,7 @@
                     }
                   ],
                   "cookie": [],
-                  "body": "{\n  \"id\": 6699,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}"
+                  "body": "{\n  \"id\": 1128,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}"
                 },
                 {
                   "name": "No Content",
@@ -104,7 +104,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -135,7 +135,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -166,7 +166,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -197,7 +197,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -210,7 +210,7 @@
                   "body": ""
                 },
                 {
-                  "name": "Internal Server Eror",
+                  "name": "Internal Server Error",
                   "originalRequest": {
                     "method": "GET",
                     "header": [],
@@ -228,7 +228,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -258,7 +258,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": false\n}",
+                  "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -280,7 +280,7 @@
                   "variable": [
                     {
                       "key": "id",
-                      "value": "1305"
+                      "value": "7573"
                     }
                   ]
                 },
@@ -288,7 +288,7 @@
               },
               "response": [
                 {
-                  "name": "Sucess",
+                  "name": "Success",
                   "originalRequest": {
                     "method": "PUT",
                     "header": [
@@ -303,7 +303,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": false\n}",
+                      "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -325,7 +325,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -340,7 +340,7 @@
                     }
                   ],
                   "cookie": [],
-                  "body": "{\n  \"id\": 6699,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}"
+                  "body": "{\n  \"id\": 1128,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}"
                 },
                 {
                   "name": "No Content",
@@ -354,7 +354,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": false\n}",
+                      "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -376,7 +376,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -400,7 +400,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": false\n}",
+                      "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -422,7 +422,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -446,7 +446,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": false\n}",
+                      "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -468,7 +468,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -492,7 +492,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": false\n}",
+                      "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -514,7 +514,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -527,7 +527,7 @@
                   "body": ""
                 },
                 {
-                  "name": "Internal Server Eror",
+                  "name": "Internal Server Error",
                   "originalRequest": {
                     "method": "PUT",
                     "header": [
@@ -538,7 +538,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": false\n}",
+                      "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -560,7 +560,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -593,7 +593,7 @@
                   "variable": [
                     {
                       "key": "id",
-                      "value": "1305"
+                      "value": "7573"
                     }
                   ]
                 },
@@ -619,7 +619,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -650,7 +650,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -681,7 +681,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -712,7 +712,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -725,7 +725,7 @@
                   "body": ""
                 },
                 {
-                  "name": "Internal Server Eror",
+                  "name": "Internal Server Error",
                   "originalRequest": {
                     "method": "DELETE",
                     "header": [],
@@ -743,7 +743,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -781,7 +781,7 @@
                   "variable": [
                     {
                       "key": "id",
-                      "value": "1305"
+                      "value": "7573"
                     }
                   ]
                 },
@@ -789,7 +789,7 @@
               },
               "response": [
                 {
-                  "name": "Sucess",
+                  "name": "Success",
                   "originalRequest": {
                     "method": "PATCH",
                     "header": [
@@ -812,7 +812,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -827,7 +827,7 @@
                     }
                   ],
                   "cookie": [],
-                  "body": "{\n  \"id\": 6699,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}"
+                  "body": "{\n  \"id\": 1128,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}"
                 },
                 {
                   "name": "No Content",
@@ -848,7 +848,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -879,7 +879,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -910,7 +910,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -941,7 +941,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -954,7 +954,7 @@
                   "body": ""
                 },
                 {
-                  "name": "Internal Server Eror",
+                  "name": "Internal Server Error",
                   "originalRequest": {
                     "method": "PATCH",
                     "header": [],
@@ -972,7 +972,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -1041,7 +1041,7 @@
                   },
                   "response": [
                     {
-                      "name": "Sucess",
+                      "name": "Success",
                       "originalRequest": {
                         "method": "GET",
                         "header": [
@@ -1094,7 +1094,7 @@
                         }
                       ],
                       "cookie": [],
-                      "body": "[\n  {\n    \"id\": 8259,\n    \"firstName\": \"string\",\n    \"lastName\": \"string\",\n    \"address\": \"string\",\n    \"gender\": \"string\",\n    \"enabled\": false\n  },\n  {\n    \"id\": 929,\n    \"firstName\": \"string\",\n    \"lastName\": \"string\",\n    \"address\": \"string\",\n    \"gender\": \"string\",\n    \"enabled\": false\n  }\n]"
+                      "body": "[\n  {\n    \"id\": 3757,\n    \"firstName\": \"string\",\n    \"lastName\": \"string\",\n    \"address\": \"string\",\n    \"gender\": \"string\",\n    \"enabled\": true\n  },\n  {\n    \"id\": 7535,\n    \"firstName\": \"string\",\n    \"lastName\": \"string\",\n    \"address\": \"string\",\n    \"gender\": \"string\",\n    \"enabled\": true\n  }\n]"
                     },
                     {
                       "name": "No Content",
@@ -1281,7 +1281,7 @@
                       "body": ""
                     },
                     {
-                      "name": "Internal Server Eror",
+                      "name": "Internal Server Error",
                       "originalRequest": {
                         "method": "GET",
                         "header": [],
@@ -1371,7 +1371,7 @@
           },
           "response": [
             {
-              "name": "Sucess",
+              "name": "Success",
               "originalRequest": {
                 "method": "GET",
                 "header": [
@@ -1416,7 +1416,7 @@
                 }
               ],
               "cookie": [],
-              "body": "[\n  {\n    \"id\": 8259,\n    \"firstName\": \"string\",\n    \"lastName\": \"string\",\n    \"address\": \"string\",\n    \"gender\": \"string\",\n    \"enabled\": false\n  },\n  {\n    \"id\": 929,\n    \"firstName\": \"string\",\n    \"lastName\": \"string\",\n    \"address\": \"string\",\n    \"gender\": \"string\",\n    \"enabled\": false\n  }\n]"
+              "body": "[\n  {\n    \"id\": 3757,\n    \"firstName\": \"string\",\n    \"lastName\": \"string\",\n    \"address\": \"string\",\n    \"gender\": \"string\",\n    \"enabled\": true\n  },\n  {\n    \"id\": 7535,\n    \"firstName\": \"string\",\n    \"lastName\": \"string\",\n    \"address\": \"string\",\n    \"gender\": \"string\",\n    \"enabled\": true\n  }\n]"
             },
             {
               "name": "No Content",
@@ -1571,7 +1571,7 @@
               "body": ""
             },
             {
-              "name": "Internal Server Eror",
+              "name": "Internal Server Error",
               "originalRequest": {
                 "method": "GET",
                 "header": [],
@@ -1626,7 +1626,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": false\n}",
+              "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -1649,7 +1649,7 @@
           },
           "response": [
             {
-              "name": "Sucess",
+              "name": "Success",
               "originalRequest": {
                 "method": "POST",
                 "header": [
@@ -1664,7 +1664,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": false\n}",
+                  "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1694,7 +1694,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"id\": 6699,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}"
+              "body": "{\n  \"id\": 1128,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}"
             },
             {
               "name": "No Content",
@@ -1708,7 +1708,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": false\n}",
+                  "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1747,7 +1747,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": false\n}",
+                  "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1786,7 +1786,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": false\n}",
+                  "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1825,7 +1825,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": false\n}",
+                  "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1853,7 +1853,7 @@
               "body": ""
             },
             {
-              "name": "Internal Server Eror",
+              "name": "Internal Server Error",
               "originalRequest": {
                 "method": "POST",
                 "header": [
@@ -1864,7 +1864,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": false\n}",
+                  "raw": "{\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"address\": \"string\",\n  \"gender\": \"string\",\n  \"enabled\": true\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -1925,7 +1925,7 @@
                   "variable": [
                     {
                       "key": "id",
-                      "value": "1305"
+                      "value": "7573"
                     }
                   ]
                 },
@@ -1956,7 +1956,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -1971,7 +1971,7 @@
                     }
                   ],
                   "cookie": [],
-                  "body": "{\n  \"id\": 385,\n  \"author\": \"string\",\n  \"launchDate\": \"2023-07-14T09:44:52.863Z\",\n  \"price\": 559.1705811732872,\n  \"title\": \"string\"\n}"
+                  "body": "{\n  \"id\": 5376,\n  \"author\": \"string\",\n  \"launchDate\": \"1961-12-18T14:48:46.932Z\",\n  \"price\": 7795.195690948435,\n  \"title\": \"string\"\n}"
                 },
                 {
                   "name": "No Content",
@@ -1992,7 +1992,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2023,7 +2023,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2054,7 +2054,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2085,7 +2085,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2116,7 +2116,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2146,7 +2146,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1982-04-04T23:18:59.918Z\",\n  \"price\": 1728.639932212963,\n  \"title\": \"string\"\n}",
+                  "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1987-01-03T22:05:22.770Z\",\n  \"price\": 4566.281138138821,\n  \"title\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -2168,7 +2168,7 @@
                   "variable": [
                     {
                       "key": "id",
-                      "value": "1305"
+                      "value": "7573"
                     }
                   ]
                 },
@@ -2191,7 +2191,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1982-04-04T23:18:59.918Z\",\n  \"price\": 1728.639932212963,\n  \"title\": \"string\"\n}",
+                      "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1987-01-03T22:05:22.770Z\",\n  \"price\": 4566.281138138821,\n  \"title\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2213,7 +2213,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2228,7 +2228,7 @@
                     }
                   ],
                   "cookie": [],
-                  "body": "{\n  \"id\": 385,\n  \"author\": \"string\",\n  \"launchDate\": \"2023-07-14T09:44:52.863Z\",\n  \"price\": 559.1705811732872,\n  \"title\": \"string\"\n}"
+                  "body": "{\n  \"id\": 5376,\n  \"author\": \"string\",\n  \"launchDate\": \"1961-12-18T14:48:46.932Z\",\n  \"price\": 7795.195690948435,\n  \"title\": \"string\"\n}"
                 },
                 {
                   "name": "No Content",
@@ -2242,7 +2242,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1982-04-04T23:18:59.918Z\",\n  \"price\": 1728.639932212963,\n  \"title\": \"string\"\n}",
+                      "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1987-01-03T22:05:22.770Z\",\n  \"price\": 4566.281138138821,\n  \"title\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2264,7 +2264,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2288,7 +2288,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1982-04-04T23:18:59.918Z\",\n  \"price\": 1728.639932212963,\n  \"title\": \"string\"\n}",
+                      "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1987-01-03T22:05:22.770Z\",\n  \"price\": 4566.281138138821,\n  \"title\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2310,7 +2310,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2334,7 +2334,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1982-04-04T23:18:59.918Z\",\n  \"price\": 1728.639932212963,\n  \"title\": \"string\"\n}",
+                      "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1987-01-03T22:05:22.770Z\",\n  \"price\": 4566.281138138821,\n  \"title\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2356,7 +2356,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2380,7 +2380,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1982-04-04T23:18:59.918Z\",\n  \"price\": 1728.639932212963,\n  \"title\": \"string\"\n}",
+                      "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1987-01-03T22:05:22.770Z\",\n  \"price\": 4566.281138138821,\n  \"title\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2402,7 +2402,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2426,7 +2426,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1982-04-04T23:18:59.918Z\",\n  \"price\": 1728.639932212963,\n  \"title\": \"string\"\n}",
+                      "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1987-01-03T22:05:22.770Z\",\n  \"price\": 4566.281138138821,\n  \"title\": \"string\"\n}",
                       "options": {
                         "raw": {
                           "headerFamily": "json",
@@ -2448,7 +2448,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2481,7 +2481,7 @@
                   "variable": [
                     {
                       "key": "id",
-                      "value": "1305"
+                      "value": "7573"
                     }
                   ]
                 },
@@ -2507,7 +2507,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2538,7 +2538,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2569,7 +2569,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2600,7 +2600,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2631,7 +2631,7 @@
                       "variable": [
                         {
                           "key": "id",
-                          "value": "1305"
+                          "value": "7573"
                         }
                       ]
                     }
@@ -2731,7 +2731,7 @@
                 }
               ],
               "cookie": [],
-              "body": "[\n  {\n    \"id\": 1337,\n    \"author\": \"string\",\n    \"launchDate\": \"1994-10-14T11:24:33.089Z\",\n    \"price\": 27.37156027033061,\n    \"title\": \"string\"\n  },\n  {\n    \"id\": 7601,\n    \"author\": \"string\",\n    \"launchDate\": \"2001-01-22T09:31:28.686Z\",\n    \"price\": 1895.5298580661272,\n    \"title\": \"string\"\n  }\n]"
+              "body": "[\n  {\n    \"id\": 6585,\n    \"author\": \"string\",\n    \"launchDate\": \"1983-01-31T10:47:28.802Z\",\n    \"price\": 211.83697977070315,\n    \"title\": \"string\"\n  },\n  {\n    \"id\": 5954,\n    \"author\": \"string\",\n    \"launchDate\": \"1988-04-26T16:25:11.694Z\",\n    \"price\": 9616.313033260401,\n    \"title\": \"string\"\n  }\n]"
             },
             {
               "name": "No Content",
@@ -2941,7 +2941,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1982-04-04T23:18:59.918Z\",\n  \"price\": 1728.639932212963,\n  \"title\": \"string\"\n}",
+              "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1987-01-03T22:05:22.770Z\",\n  \"price\": 4566.281138138821,\n  \"title\": \"string\"\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -2979,7 +2979,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1982-04-04T23:18:59.918Z\",\n  \"price\": 1728.639932212963,\n  \"title\": \"string\"\n}",
+                  "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1987-01-03T22:05:22.770Z\",\n  \"price\": 4566.281138138821,\n  \"title\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -3009,7 +3009,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"id\": 385,\n  \"author\": \"string\",\n  \"launchDate\": \"2023-07-14T09:44:52.863Z\",\n  \"price\": 559.1705811732872,\n  \"title\": \"string\"\n}"
+              "body": "{\n  \"id\": 5376,\n  \"author\": \"string\",\n  \"launchDate\": \"1961-12-18T14:48:46.932Z\",\n  \"price\": 7795.195690948435,\n  \"title\": \"string\"\n}"
             },
             {
               "name": "Bad Request",
@@ -3023,7 +3023,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1982-04-04T23:18:59.918Z\",\n  \"price\": 1728.639932212963,\n  \"title\": \"string\"\n}",
+                  "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1987-01-03T22:05:22.770Z\",\n  \"price\": 4566.281138138821,\n  \"title\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -3062,7 +3062,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1982-04-04T23:18:59.918Z\",\n  \"price\": 1728.639932212963,\n  \"title\": \"string\"\n}",
+                  "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1987-01-03T22:05:22.770Z\",\n  \"price\": 4566.281138138821,\n  \"title\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -3101,7 +3101,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1982-04-04T23:18:59.918Z\",\n  \"price\": 1728.639932212963,\n  \"title\": \"string\"\n}",
+                  "raw": "{\n  \"author\": \"string\",\n  \"launchDate\": \"1987-01-03T22:05:22.770Z\",\n  \"price\": 4566.281138138821,\n  \"title\": \"string\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -3136,20 +3136,35 @@
       "name": "files",
       "item": [
         {
-          "name": "uploadMultipleFiles",
+          "name": "multiple",
           "item": [
             {
-              "name": "Upload Files",
+              "name": "Upload multiple Files",
               "request": {
                 "method": "POST",
                 "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "multipart/form-data"
+                  },
                   {
                     "key": "Accept",
                     "value": "*/*"
                   }
                 ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": "Files to upload",
+                      "key": "files",
+                      "value": "string,string",
+                      "type": "text"
+                    }
+                  ]
+                },
                 "url": {
-                  "raw": "{{baseUrl}}/api/files/v1/uploadMultipleFiles?files=string&files=string",
+                  "raw": "{{baseUrl}}/api/files/v1/multiple",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -3157,17 +3172,7 @@
                     "api",
                     "files",
                     "v1",
-                    "uploadMultipleFiles"
-                  ],
-                  "query": [
-                    {
-                      "key": "files",
-                      "value": "string"
-                    },
-                    {
-                      "key": "files",
-                      "value": "string"
-                    }
+                    "multiple"
                   ]
                 },
                 "description": "Uploads multiple files"
@@ -3179,219 +3184,8 @@
                     "method": "POST",
                     "header": [
                       {
-                        "key": "Accept",
-                        "value": "*/*"
-                      }
-                    ],
-                    "url": {
-                      "raw": "{{baseUrl}}/api/files/v1/uploadMultipleFiles?files=string",
-                      "host": [
-                        "{{baseUrl}}"
-                      ],
-                      "path": [
-                        "api",
-                        "files",
-                        "v1",
-                        "uploadMultipleFiles"
-                      ],
-                      "query": [
-                        {
-                          "key": "files",
-                          "value": "string"
-                        }
-                      ]
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "text",
-                  "header": [
-                    {
-                      "key": "Content-Type",
-                      "value": "*/*"
-                    }
-                  ],
-                  "cookie": [],
-                  "body": "{\n  \"fileName\": \"string\",\n  \"fileType\": \"string\",\n  \"size\": 566,\n  \"fileDownloadUri\": \"string\"\n}"
-                },
-                {
-                  "name": "Bad Request",
-                  "originalRequest": {
-                    "method": "POST",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseUrl}}/api/files/v1/uploadMultipleFiles?files=string",
-                      "host": [
-                        "{{baseUrl}}"
-                      ],
-                      "path": [
-                        "api",
-                        "files",
-                        "v1",
-                        "uploadMultipleFiles"
-                      ],
-                      "query": [
-                        {
-                          "key": "files",
-                          "value": "string"
-                        }
-                      ]
-                    }
-                  },
-                  "status": "Bad Request",
-                  "code": 400,
-                  "_postman_previewlanguage": "text",
-                  "header": [],
-                  "cookie": [],
-                  "body": ""
-                },
-                {
-                  "name": "Unauthorized",
-                  "originalRequest": {
-                    "method": "POST",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseUrl}}/api/files/v1/uploadMultipleFiles?files=string",
-                      "host": [
-                        "{{baseUrl}}"
-                      ],
-                      "path": [
-                        "api",
-                        "files",
-                        "v1",
-                        "uploadMultipleFiles"
-                      ],
-                      "query": [
-                        {
-                          "key": "files",
-                          "value": "string"
-                        }
-                      ]
-                    }
-                  },
-                  "status": "Unauthorized",
-                  "code": 401,
-                  "_postman_previewlanguage": "text",
-                  "header": [],
-                  "cookie": [],
-                  "body": ""
-                },
-                {
-                  "name": "Not Found",
-                  "originalRequest": {
-                    "method": "POST",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseUrl}}/api/files/v1/uploadMultipleFiles?files=string",
-                      "host": [
-                        "{{baseUrl}}"
-                      ],
-                      "path": [
-                        "api",
-                        "files",
-                        "v1",
-                        "uploadMultipleFiles"
-                      ],
-                      "query": [
-                        {
-                          "key": "files",
-                          "value": "string"
-                        }
-                      ]
-                    }
-                  },
-                  "status": "Not Found",
-                  "code": 404,
-                  "_postman_previewlanguage": "text",
-                  "header": [],
-                  "cookie": [],
-                  "body": ""
-                },
-                {
-                  "name": "Internal Server Error",
-                  "originalRequest": {
-                    "method": "POST",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseUrl}}/api/files/v1/uploadMultipleFiles?files=string",
-                      "host": [
-                        "{{baseUrl}}"
-                      ],
-                      "path": [
-                        "api",
-                        "files",
-                        "v1",
-                        "uploadMultipleFiles"
-                      ],
-                      "query": [
-                        {
-                          "key": "files",
-                          "value": "string"
-                        }
-                      ]
-                    }
-                  },
-                  "status": "Internal Server Error",
-                  "code": 500,
-                  "_postman_previewlanguage": "text",
-                  "header": [],
-                  "cookie": [],
-                  "body": ""
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "uploadFile",
-          "item": [
-            {
-              "name": "Upload a File",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "*/*"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"file\": \"string\"\n}",
-                  "options": {
-                    "raw": {
-                      "headerFamily": "json",
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{baseUrl}}/api/files/v1/uploadFile",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "api",
-                    "files",
-                    "v1",
-                    "uploadFile"
-                  ]
-                },
-                "description": "Uploads a single file"
-              },
-              "response": [
-                {
-                  "name": "Success",
-                  "originalRequest": {
-                    "method": "POST",
-                    "header": [
-                      {
                         "key": "Content-Type",
-                        "value": "application/json"
+                        "value": "multipart/form-data"
                       },
                       {
                         "key": "Accept",
@@ -3399,17 +3193,18 @@
                       }
                     ],
                     "body": {
-                      "mode": "raw",
-                      "raw": "{\n  \"file\": \"string\"\n}",
-                      "options": {
-                        "raw": {
-                          "headerFamily": "json",
-                          "language": "json"
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "description": "Files to upload",
+                          "key": "files",
+                          "value": "string,string",
+                          "type": "text"
                         }
-                      }
+                      ]
                     },
                     "url": {
-                      "raw": "{{baseUrl}}/api/files/v1/uploadFile",
+                      "raw": "{{baseUrl}}/api/files/v1/multiple",
                       "host": [
                         "{{baseUrl}}"
                       ],
@@ -3417,7 +3212,7 @@
                         "api",
                         "files",
                         "v1",
-                        "uploadFile"
+                        "multiple"
                       ]
                     }
                   },
@@ -3431,7 +3226,7 @@
                     }
                   ],
                   "cookie": [],
-                  "body": "{\n  \"fileName\": \"string\",\n  \"fileType\": \"string\",\n  \"size\": 566,\n  \"fileDownloadUri\": \"string\"\n}"
+                  "body": "{\n  \"fileName\": \"string\",\n  \"fileType\": \"string\",\n  \"size\": 9596,\n  \"fileDownloadUri\": \"string\"\n}"
                 },
                 {
                   "name": "Bad Request",
@@ -3440,21 +3235,22 @@
                     "header": [
                       {
                         "key": "Content-Type",
-                        "value": "application/json"
+                        "value": "multipart/form-data"
                       }
                     ],
                     "body": {
-                      "mode": "raw",
-                      "raw": "{\n  \"file\": \"string\"\n}",
-                      "options": {
-                        "raw": {
-                          "headerFamily": "json",
-                          "language": "json"
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "description": "Files to upload",
+                          "key": "files",
+                          "value": "string,string",
+                          "type": "text"
                         }
-                      }
+                      ]
                     },
                     "url": {
-                      "raw": "{{baseUrl}}/api/files/v1/uploadFile",
+                      "raw": "{{baseUrl}}/api/files/v1/multiple",
                       "host": [
                         "{{baseUrl}}"
                       ],
@@ -3462,7 +3258,7 @@
                         "api",
                         "files",
                         "v1",
-                        "uploadFile"
+                        "multiple"
                       ]
                     }
                   },
@@ -3480,21 +3276,22 @@
                     "header": [
                       {
                         "key": "Content-Type",
-                        "value": "application/json"
+                        "value": "multipart/form-data"
                       }
                     ],
                     "body": {
-                      "mode": "raw",
-                      "raw": "{\n  \"file\": \"string\"\n}",
-                      "options": {
-                        "raw": {
-                          "headerFamily": "json",
-                          "language": "json"
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "description": "Files to upload",
+                          "key": "files",
+                          "value": "string,string",
+                          "type": "text"
                         }
-                      }
+                      ]
                     },
                     "url": {
-                      "raw": "{{baseUrl}}/api/files/v1/uploadFile",
+                      "raw": "{{baseUrl}}/api/files/v1/multiple",
                       "host": [
                         "{{baseUrl}}"
                       ],
@@ -3502,7 +3299,7 @@
                         "api",
                         "files",
                         "v1",
-                        "uploadFile"
+                        "multiple"
                       ]
                     }
                   },
@@ -3520,21 +3317,22 @@
                     "header": [
                       {
                         "key": "Content-Type",
-                        "value": "application/json"
+                        "value": "multipart/form-data"
                       }
                     ],
                     "body": {
-                      "mode": "raw",
-                      "raw": "{\n  \"file\": \"string\"\n}",
-                      "options": {
-                        "raw": {
-                          "headerFamily": "json",
-                          "language": "json"
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "description": "Files to upload",
+                          "key": "files",
+                          "value": "string,string",
+                          "type": "text"
                         }
-                      }
+                      ]
                     },
                     "url": {
-                      "raw": "{{baseUrl}}/api/files/v1/uploadFile",
+                      "raw": "{{baseUrl}}/api/files/v1/multiple",
                       "host": [
                         "{{baseUrl}}"
                       ],
@@ -3542,7 +3340,7 @@
                         "api",
                         "files",
                         "v1",
-                        "uploadFile"
+                        "multiple"
                       ]
                     }
                   },
@@ -3560,21 +3358,22 @@
                     "header": [
                       {
                         "key": "Content-Type",
-                        "value": "application/json"
+                        "value": "multipart/form-data"
                       }
                     ],
                     "body": {
-                      "mode": "raw",
-                      "raw": "{\n  \"file\": \"string\"\n}",
-                      "options": {
-                        "raw": {
-                          "headerFamily": "json",
-                          "language": "json"
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "description": "Files to upload",
+                          "key": "files",
+                          "value": "string,string",
+                          "type": "text"
                         }
-                      }
+                      ]
                     },
                     "url": {
-                      "raw": "{{baseUrl}}/api/files/v1/uploadFile",
+                      "raw": "{{baseUrl}}/api/files/v1/multiple",
                       "host": [
                         "{{baseUrl}}"
                       ],
@@ -3582,7 +3381,7 @@
                         "api",
                         "files",
                         "v1",
-                        "uploadFile"
+                        "multiple"
                       ]
                     }
                   },
@@ -3598,14 +3397,43 @@
           ]
         },
         {
-          "name": "downloadFile",
+          "name": "{fileName}",
           "item": [
             {
-              "name": "{fileName}",
-              "item": [
+              "name": "Download a File",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/files/v1/:fileName",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "files",
+                    "v1",
+                    ":fileName"
+                  ],
+                  "variable": [
+                    {
+                      "key": "fileName",
+                      "value": "string",
+                      "description": "Name of the file to download"
+                    }
+                  ]
+                },
+                "description": "Downloads a specific file by their file name"
+              },
+              "response": [
                 {
-                  "name": "Download a File",
-                  "request": {
+                  "name": "Success",
+                  "originalRequest": {
                     "method": "GET",
                     "header": [
                       {
@@ -3614,7 +3442,7 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{baseUrl}}/api/files/v1/downloadFile/:fileName",
+                      "raw": "{{baseUrl}}/api/files/v1/:fileName",
                       "host": [
                         "{{baseUrl}}"
                       ],
@@ -3622,192 +3450,408 @@
                         "api",
                         "files",
                         "v1",
-                        "downloadFile",
                         ":fileName"
                       ],
                       "variable": [
                         {
                           "key": "fileName",
-                          "value": "string"
+                          "value": "string",
+                          "description": "Name of the file to download"
                         }
                       ]
-                    },
-                    "description": "Downloads a specific file"
-                  },
-                  "response": [
-                    {
-                      "name": "Success",
-                      "originalRequest": {
-                        "method": "GET",
-                        "header": [
-                          {
-                            "key": "Accept",
-                            "value": "*/*"
-                          }
-                        ],
-                        "url": {
-                          "raw": "{{baseUrl}}/api/files/v1/downloadFile/:fileName",
-                          "host": [
-                            "{{baseUrl}}"
-                          ],
-                          "path": [
-                            "api",
-                            "files",
-                            "v1",
-                            "downloadFile",
-                            ":fileName"
-                          ],
-                          "variable": [
-                            {
-                              "key": "fileName",
-                              "value": "string"
-                            }
-                          ]
-                        }
-                      },
-                      "status": "OK",
-                      "code": 200,
-                      "_postman_previewlanguage": "text",
-                      "header": [
-                        {
-                          "key": "Content-Type",
-                          "value": "*/*"
-                        }
-                      ],
-                      "cookie": [],
-                      "body": "{\n  \"fileName\": \"string\",\n  \"fileType\": \"string\",\n  \"size\": 566,\n  \"fileDownloadUri\": \"string\"\n}"
-                    },
-                    {
-                      "name": "Bad Request",
-                      "originalRequest": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                          "raw": "{{baseUrl}}/api/files/v1/downloadFile/:fileName",
-                          "host": [
-                            "{{baseUrl}}"
-                          ],
-                          "path": [
-                            "api",
-                            "files",
-                            "v1",
-                            "downloadFile",
-                            ":fileName"
-                          ],
-                          "variable": [
-                            {
-                              "key": "fileName",
-                              "value": "string"
-                            }
-                          ]
-                        }
-                      },
-                      "status": "Bad Request",
-                      "code": 400,
-                      "_postman_previewlanguage": "text",
-                      "header": [],
-                      "cookie": [],
-                      "body": ""
-                    },
-                    {
-                      "name": "Unauthorized",
-                      "originalRequest": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                          "raw": "{{baseUrl}}/api/files/v1/downloadFile/:fileName",
-                          "host": [
-                            "{{baseUrl}}"
-                          ],
-                          "path": [
-                            "api",
-                            "files",
-                            "v1",
-                            "downloadFile",
-                            ":fileName"
-                          ],
-                          "variable": [
-                            {
-                              "key": "fileName",
-                              "value": "string"
-                            }
-                          ]
-                        }
-                      },
-                      "status": "Unauthorized",
-                      "code": 401,
-                      "_postman_previewlanguage": "text",
-                      "header": [],
-                      "cookie": [],
-                      "body": ""
-                    },
-                    {
-                      "name": "Not Found",
-                      "originalRequest": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                          "raw": "{{baseUrl}}/api/files/v1/downloadFile/:fileName",
-                          "host": [
-                            "{{baseUrl}}"
-                          ],
-                          "path": [
-                            "api",
-                            "files",
-                            "v1",
-                            "downloadFile",
-                            ":fileName"
-                          ],
-                          "variable": [
-                            {
-                              "key": "fileName",
-                              "value": "string"
-                            }
-                          ]
-                        }
-                      },
-                      "status": "Not Found",
-                      "code": 404,
-                      "_postman_previewlanguage": "text",
-                      "header": [],
-                      "cookie": [],
-                      "body": ""
-                    },
-                    {
-                      "name": "Internal Server Error",
-                      "originalRequest": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                          "raw": "{{baseUrl}}/api/files/v1/downloadFile/:fileName",
-                          "host": [
-                            "{{baseUrl}}"
-                          ],
-                          "path": [
-                            "api",
-                            "files",
-                            "v1",
-                            "downloadFile",
-                            ":fileName"
-                          ],
-                          "variable": [
-                            {
-                              "key": "fileName",
-                              "value": "string"
-                            }
-                          ]
-                        }
-                      },
-                      "status": "Internal Server Error",
-                      "code": 500,
-                      "_postman_previewlanguage": "text",
-                      "header": [],
-                      "cookie": [],
-                      "body": ""
                     }
-                  ]
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "*/*"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"fileName\": \"string\",\n  \"fileType\": \"string\",\n  \"size\": 9596,\n  \"fileDownloadUri\": \"string\"\n}"
+                },
+                {
+                  "name": "Bad Request",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/files/v1/:fileName",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "files",
+                        "v1",
+                        ":fileName"
+                      ],
+                      "variable": [
+                        {
+                          "key": "fileName",
+                          "value": "string",
+                          "description": "Name of the file to download"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Bad Request",
+                  "code": 400,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                },
+                {
+                  "name": "Unauthorized",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/files/v1/:fileName",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "files",
+                        "v1",
+                        ":fileName"
+                      ],
+                      "variable": [
+                        {
+                          "key": "fileName",
+                          "value": "string",
+                          "description": "Name of the file to download"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                },
+                {
+                  "name": "Not Found",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/files/v1/:fileName",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "files",
+                        "v1",
+                        ":fileName"
+                      ],
+                      "variable": [
+                        {
+                          "key": "fileName",
+                          "value": "string",
+                          "description": "Name of the file to download"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                },
+                {
+                  "name": "Internal Server Error",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/files/v1/:fileName",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "files",
+                        "v1",
+                        ":fileName"
+                      ],
+                      "variable": [
+                        {
+                          "key": "fileName",
+                          "value": "string",
+                          "description": "Name of the file to download"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Internal Server Error",
+                  "code": 500,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
                 }
               ]
+            }
+          ]
+        },
+        {
+          "name": "Upload a File",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              },
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "description": "File to upload",
+                  "key": "file",
+                  "type": "file",
+                  "value": null
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/files/v1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "files",
+                "v1"
+              ]
+            },
+            "description": "Uploads a single file"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "multipart/form-data"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": "File to upload",
+                      "key": "file",
+                      "type": "file",
+                      "src": []
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/files/v1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "files",
+                    "v1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"fileName\": \"string\",\n  \"fileType\": \"string\",\n  \"size\": 9596,\n  \"fileDownloadUri\": \"string\"\n}"
+            },
+            {
+              "name": "Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "multipart/form-data"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": "File to upload",
+                      "key": "file",
+                      "type": "file",
+                      "src": []
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/files/v1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "files",
+                    "v1"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": ""
+            },
+            {
+              "name": "Unauthorized",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "multipart/form-data"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": "File to upload",
+                      "key": "file",
+                      "type": "file",
+                      "src": []
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/files/v1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "files",
+                    "v1"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": ""
+            },
+            {
+              "name": "Not Found",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "multipart/form-data"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": "File to upload",
+                      "key": "file",
+                      "type": "file",
+                      "src": []
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/files/v1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "files",
+                    "v1"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": ""
+            },
+            {
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "multipart/form-data"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": "File to upload",
+                      "key": "file",
+                      "type": "file",
+                      "src": []
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/files/v1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "files",
+                    "v1"
+                  ]
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": ""
             }
           ]
         }

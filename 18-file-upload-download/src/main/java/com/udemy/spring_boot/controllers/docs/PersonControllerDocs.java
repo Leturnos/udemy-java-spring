@@ -6,17 +6,19 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "People", description = "Endpoints for Managing People")
 public interface PersonControllerDocs {
     @Operation(summary = "Find All People", description = "Finds ALL People",
             tags = {"People"},
             responses = {
-                    @ApiResponse(description = "Sucess",
+                    @ApiResponse(description = "Success",
                             responseCode = "200",
                             content = {
                                     @Content(
@@ -28,7 +30,7 @@ public interface PersonControllerDocs {
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Internal Server Eror", responseCode = "500", content = @Content)
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
 
             }
     )
@@ -41,7 +43,7 @@ public interface PersonControllerDocs {
     @Operation(summary = "Find People by first name", description = "Finds People by their first names",
             tags = {"People"},
             responses = {
-                    @ApiResponse(description = "Sucess",
+                    @ApiResponse(description = "Success",
                             responseCode = "200",
                             content = {
                                     @Content(
@@ -53,7 +55,7 @@ public interface PersonControllerDocs {
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Internal Server Eror", responseCode = "500", content = @Content)
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
 
             }
     )
@@ -67,7 +69,7 @@ public interface PersonControllerDocs {
     @Operation(summary = "Finds a Person", description = "Find a specific person by your id",
             tags = {"People"},
             responses = {
-                    @ApiResponse(description = "Sucess",
+                    @ApiResponse(description = "Success",
                             responseCode = "200",
                             content = {
                                     @Content(schema = @Schema(implementation = PersonDTO.class))
@@ -76,7 +78,7 @@ public interface PersonControllerDocs {
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Internal Server Eror", responseCode = "500", content = @Content)
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
     PersonDTO findById(@PathVariable("id") Long id);
@@ -84,7 +86,7 @@ public interface PersonControllerDocs {
     @Operation(summary = "Adds a new Person", description = "Adds a new Person with JSON, XML or YML Body",
             tags = {"People"},
             responses = {
-                    @ApiResponse(description = "Sucess",
+                    @ApiResponse(description = "Success",
                             responseCode = "200",
                             content = {
                                     @Content(schema = @Schema(implementation = PersonDTO.class))
@@ -93,7 +95,7 @@ public interface PersonControllerDocs {
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Internal Server Eror", responseCode = "500", content = @Content)
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
     PersonDTO create(@RequestBody PersonDTO person);
@@ -101,7 +103,7 @@ public interface PersonControllerDocs {
     @Operation(summary = "Updates a person's information", description = "Updates a person's information with JSON, XML ou YML Body",
             tags = {"People"},
             responses = {
-                    @ApiResponse(description = "Sucess",
+                    @ApiResponse(description = "Success",
                             responseCode = "200",
                             content = {
                                     @Content(schema = @Schema(implementation = PersonDTO.class))
@@ -110,7 +112,7 @@ public interface PersonControllerDocs {
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Internal Server Eror", responseCode = "500", content = @Content)
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
     PersonDTO update(@PathVariable("id") Long id, @RequestBody PersonDTO person);
@@ -118,7 +120,7 @@ public interface PersonControllerDocs {
     @Operation(summary = "Disable a Person", description = "Find a specific person by your id",
             tags = {"People"},
             responses = {
-                    @ApiResponse(description = "Sucess",
+                    @ApiResponse(description = "Success",
                             responseCode = "200",
                             content = {
                                     @Content(schema = @Schema(implementation = PersonDTO.class))
@@ -127,7 +129,7 @@ public interface PersonControllerDocs {
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Internal Server Eror", responseCode = "500", content = @Content)
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
     PersonDTO disablePerson(@PathVariable("id") Long id);
@@ -139,7 +141,7 @@ public interface PersonControllerDocs {
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Internal Server Eror", responseCode = "500", content = @Content)
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
     ResponseEntity<?> delete(@PathVariable("id") Long id);
