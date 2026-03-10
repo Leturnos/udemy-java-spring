@@ -10,7 +10,7 @@ public class BookHalEmbedded implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @JsonProperty("bookDTOList")
+    @JsonProperty("books")
     private List<BookDTO> books;
 
     public BookHalEmbedded() {}
