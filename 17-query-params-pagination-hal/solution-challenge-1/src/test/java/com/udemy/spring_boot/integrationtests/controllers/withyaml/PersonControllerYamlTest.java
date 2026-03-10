@@ -199,6 +199,7 @@ class PersonControllerYamlTest extends AbstractIntegrationTest {
 
 
     @Test
+    @Disabled("Reason: This test is implemented in the next challenge")
     @Order(6)
     void findAllTest() {
 

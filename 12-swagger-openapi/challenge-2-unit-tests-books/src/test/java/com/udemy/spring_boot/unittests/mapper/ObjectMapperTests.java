@@ -1,4 +1,4 @@
-package com.udemy.spring_boot.unitetests.mapper;
+package com.udemy.spring_boot.unittests.mapper;
 
 import static com.udemy.spring_boot.mapper.ObjectMapper.parseListObjects;
 import static com.udemy.spring_boot.mapper.ObjectMapper.parseObject;
@@ -9,7 +9,7 @@ import java.util.List;
 
 import com.udemy.spring_boot.data.dto.BookDTO;
 import com.udemy.spring_boot.model.Book;
-import com.udemy.spring_boot.unitetests.mapper.mocks.MockBook;
+import com.udemy.spring_boot.unittests.mapper.mocks.MockBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

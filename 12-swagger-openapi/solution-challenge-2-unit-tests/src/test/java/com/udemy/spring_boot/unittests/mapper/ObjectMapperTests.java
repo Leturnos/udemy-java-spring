@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 
 import com.udemy.spring_boot.data.dto.PersonDTO;
-import com.udemy.spring_boot.unitetests.mapper.mocks.MockPerson;
+import com.udemy.spring_boot.unittests.mapper.mocks.MockPerson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

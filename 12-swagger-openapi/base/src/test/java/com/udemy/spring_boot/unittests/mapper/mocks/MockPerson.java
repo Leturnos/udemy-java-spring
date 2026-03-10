@@ -1,4 +1,4 @@
-package com.udemy.spring_boot.unitetests.mapper.mocks;
+package com.udemy.spring_boot.unittests.mapper.mocks;
 
 import java.util.ArrayList;
 import java.util.List;

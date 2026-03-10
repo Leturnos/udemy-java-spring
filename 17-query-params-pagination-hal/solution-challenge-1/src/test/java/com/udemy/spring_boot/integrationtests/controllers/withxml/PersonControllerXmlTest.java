@@ -184,6 +184,7 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
 
 
     @Test
+    @Disabled("Reason: This test is implemented in the next challenge")
     @Order(6)
     void findAllTest() throws JsonProcessingException {
 

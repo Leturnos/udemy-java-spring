@@ -1,4 +1,4 @@
-package com.udemy.spring_boot.unitetests.mapper;
+package com.udemy.spring_boot.unittests.mapper;
 
 import static com.udemy.spring_boot.mapper.ObjectMapper.parseListObjects;
 import static com.udemy.spring_boot.mapper.ObjectMapper.parseObject;

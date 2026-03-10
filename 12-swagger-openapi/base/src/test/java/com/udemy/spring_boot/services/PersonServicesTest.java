@@ -4,11 +4,11 @@ import com.udemy.spring_boot.data.dto.PersonDTO;
 import com.udemy.spring_boot.exception.RequiredObjectIsNullException;
 import com.udemy.spring_boot.model.Person;
 import com.udemy.spring_boot.repository.PersonRepository;
-import com.udemy.spring_boot.unitetests.mapper.mocks.MockPerson;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.udemy.spring_boot.unittests.mapper.mocks.MockPerson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
