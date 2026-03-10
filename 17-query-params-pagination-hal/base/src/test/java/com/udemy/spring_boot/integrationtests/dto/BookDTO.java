@@ -1,11 +1,13 @@
 package com.udemy.spring_boot.integrationtests.dto;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+@Relation(collectionRelation = "books")
 @XmlRootElement
 public class BookDTO implements Serializable {
 

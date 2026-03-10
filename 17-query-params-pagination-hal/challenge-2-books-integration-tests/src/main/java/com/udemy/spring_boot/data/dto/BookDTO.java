@@ -3,11 +3,13 @@ package com.udemy.spring_boot.data.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.hateoas.Links;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+@Relation(collectionRelation = "books") // para  o Spring HATEOAS gerar "books" dentro do _embedded
 public class BookDTO extends RepresentationModel<BookDTO> implements Serializable {
 
     private static final long serialVersionUID = 1L;
