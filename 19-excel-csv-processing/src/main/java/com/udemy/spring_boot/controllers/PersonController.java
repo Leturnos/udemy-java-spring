@@ -1,0 +1,107 @@
+package com.udemy.spring_boot.controllers;
+
+import com.udemy.spring_boot.controllers.docs.PersonControllerDocs;
+import com.udemy.spring_boot.data.dto.PersonDTO;
+import com.udemy.spring_boot.services.PersonServices;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+// @CrossOrigin(origins = "http://localhost:8080") é uma opção para CORS
+@RestController
+@RequestMapping("/api/person/v1")
+public class PersonController implements PersonControllerDocs { // A documentação do Swaager fica na interface PersonControllerDocs
+
+    @Autowired // para não precisa do "= new PersonServices();"
+    private PersonServices personServices;
+
+    @GetMapping(
+            produces = {MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE}
+    )
+    @Override
+    public ResponseEntity<PagedModel<EntityModel<PersonDTO>>> findAll(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "12") Integer size,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction
+    ) {
+        var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName"));
+        return ResponseEntity.ok(personServices.findAll(pageable));
+    }
+
+    @GetMapping(value = "/findPeopleByName/{firstName}",
+            produces = {MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE}
+    )
+    @Override
+    public ResponseEntity<PagedModel<EntityModel<PersonDTO>>> findByName(
+            @PathVariable("firstName") String firstName,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "12") Integer size,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction
+    ) {
+        var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName"));
+        return ResponseEntity.ok(personServices.findByName(firstName, pageable));
+    }
+
+    //@CrossOrigin(origins = "http://localhost:8080")
+    @GetMapping(value = "/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE}
+    )
+    @Override
+    public PersonDTO findById(@PathVariable("id") Long id) {
+        return personServices.findById(id);
+    }
+
+    //@CrossOrigin(origins = {"http://localhost:8080", "https://www.google.com"})
+    @PostMapping(
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
+    )
+    @Override
+    public PersonDTO create(@RequestBody PersonDTO person) { // sem o RequestBody, não conseguimos pegar os valores do body
+        return personServices.create(person);
+    }
+
+    @PutMapping(
+            value = "/{id}",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
+    )
+    @Override
+    public PersonDTO update(@PathVariable(value = "id") Long id, @RequestBody PersonDTO person) {
+        person.setId(id);
+        return personServices.update(person);
+    }
+
+    @PatchMapping(value = "/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE}
+    )
+    @Override
+    public PersonDTO disablePerson(@PathVariable("id") Long id) {
+        return personServices.disablePerson(id);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @Override
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        personServices.delete(id);
+
+        return ResponseEntity.noContent().build();
+    }
+}
