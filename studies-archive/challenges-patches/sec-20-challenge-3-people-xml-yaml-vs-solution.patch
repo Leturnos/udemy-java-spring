@@ -1,0 +1,124 @@
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/challenge-3-people-xml-yaml-integration-tests/src/main/java/com/udemy/spring_boot/controllers/BookController.java 17-query-params-pagination-hal/solution-challenge-3/src/main/java/com/udemy/spring_boot/controllers/BookController.java
+--- 17-query-params-pagination-hal/challenge-3-people-xml-yaml-integration-tests/src/main/java/com/udemy/spring_boot/controllers/BookController.java	2026-11-19 10:11:33.355339858 -0300
++++ 17-query-params-pagination-hal/solution-challenge-3/src/main/java/com/udemy/spring_boot/controllers/BookController.java	2026-11-19 10:11:33.376076212 -0300
+@@ -82,6 +82,7 @@
+         return service.update(book);
+     }
+ 
++
+     @DeleteMapping(value = "/{id}")
+     @Override
+     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/challenge-3-people-xml-yaml-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/PersonControllerXmlTest.java 17-query-params-pagination-hal/solution-challenge-3/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/PersonControllerXmlTest.java
+--- 17-query-params-pagination-hal/challenge-3-people-xml-yaml-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/PersonControllerXmlTest.java	2026-11-19 10:11:33.359075633 -0300
++++ 17-query-params-pagination-hal/solution-challenge-3/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/PersonControllerXmlTest.java	2026-11-19 10:11:33.379744954 -0300
+@@ -5,7 +5,6 @@
+ import com.udemy.spring_boot.config.TestConfigs;
+ import com.udemy.spring_boot.integrationtests.dto.PersonDTO;
+ import com.udemy.spring_boot.integrationtests.dto.Wrapper.PersonPagedModel;
+-import com.udemy.spring_boot.integrationtests.dto.Wrapper.json.PersonHalPagedModel;
+ import com.udemy.spring_boot.integrationtests.testcontainer.AbstractIntegrationTest;
+ import io.restassured.builder.RequestSpecBuilder;
+ import io.restassured.filter.log.LogDetail;
+@@ -230,10 +229,10 @@
+     @Order(7)
+     void findByNameTest() throws JsonProcessingException {
+ 
+-        var bodyContent = given(specification)
++        var content = given(specification)
+                 .accept(MediaType.APPLICATION_XML_VALUE)
+                 .pathParam("firstName", "and")
+-                .queryParam("page", 0, "size", 12, "direction", "desc")
++                .queryParams("page", 0, "size", 12, "direction", "asc")
+                 .when()
+                 .get("findPeopleByName/{firstName}")
+                 .then()
+@@ -243,7 +242,7 @@
+                 .body()
+                 .asString();
+ 
+-        PersonPagedModel wrapper = objectMapper.readValue(bodyContent, PersonPagedModel.class);
++        PersonPagedModel wrapper = objectMapper.readValue(content, PersonPagedModel.class);
+         List<PersonDTO> people = wrapper.getContent();
+ 
+         PersonDTO personOne = people.get(0);
+@@ -257,16 +256,16 @@
+         assertEquals("Male", personOne.getGender());
+         assertTrue(personOne.getEnabled());
+ 
+-        PersonDTO personten = people.get(9);
++        PersonDTO personFive = people.get(4);
+ 
+-        assertNotNull(personten.getId());
+-        assertTrue(personten.getId() > 0);
++        assertNotNull(personFive.getId());
++        assertTrue(personFive.getId() > 0);
+ 
+-        assertEquals("Leland", personten.getFirstName());
+-        assertEquals("Bedo", personten.getLastName());
+-        assertEquals("852 Atwood Park", personten.getAddress());
+-        assertEquals("Female", personten.getGender());
+-        assertFalse(personten.getEnabled());
++        assertEquals("Brandyn", personFive.getFirstName());
++        assertEquals("Grasha", personFive.getLastName());
++        assertEquals("96 Mosinee Parkway", personFive.getAddress());
++        assertEquals("Male", personFive.getGender());
++        assertTrue(personFive.getEnabled());
+     }
+ 
+     private void mockPerson() {
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/challenge-3-people-xml-yaml-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/PersonControllerYamlTest.java 17-query-params-pagination-hal/solution-challenge-3/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/PersonControllerYamlTest.java
+--- 17-query-params-pagination-hal/challenge-3-people-xml-yaml-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/PersonControllerYamlTest.java	2026-11-19 10:11:33.359255883 -0300
++++ 17-query-params-pagination-hal/solution-challenge-3/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/PersonControllerYamlTest.java	2026-11-19 10:11:33.379951315 -0300
+@@ -1,11 +1,9 @@
+ package com.udemy.spring_boot.integrationtests.controllers.withyaml;
+ 
+-import com.fasterxml.jackson.core.JsonProcessingException;
+ import com.udemy.spring_boot.config.TestConfigs;
+ import com.udemy.spring_boot.integrationtests.controllers.withyaml.mapper.YAMLMapper;
+ import com.udemy.spring_boot.integrationtests.dto.PersonDTO;
+ import com.udemy.spring_boot.integrationtests.dto.Wrapper.PersonPagedModel;
+-import com.udemy.spring_boot.integrationtests.dto.Wrapper.json.PersonHalPagedModel;
+ import com.udemy.spring_boot.integrationtests.testcontainer.AbstractIntegrationTest;
+ import io.restassured.builder.RequestSpecBuilder;
+ import io.restassured.config.EncoderConfig;
+@@ -243,12 +241,12 @@
+ 
+     @Test
+     @Order(7)
+-    void findByNameTest() {
++    void findByNameTestTest() {
+ 
+         var response = given(specification)
+                 .accept(MediaType.APPLICATION_YAML_VALUE)
+                 .pathParam("firstName", "and")
+-                .queryParam("page", 0, "size", 12, "direction", "desc")
++                .queryParams("page", 0, "size", 12, "direction", "asc")
+                 .when()
+                 .get("findPeopleByName/{firstName}")
+                 .then()
+@@ -271,16 +269,16 @@
+         assertEquals("Male", personOne.getGender());
+         assertTrue(personOne.getEnabled());
+ 
+-        PersonDTO personten = people.get(9);
++        PersonDTO personFive = people.get(4);
+ 
+-        assertNotNull(personten.getId());
+-        assertTrue(personten.getId() > 0);
++        assertNotNull(personFive.getId());
++        assertTrue(personFive.getId() > 0);
+ 
+-        assertEquals("Leland", personten.getFirstName());
+-        assertEquals("Bedo", personten.getLastName());
+-        assertEquals("852 Atwood Park", personten.getAddress());
+-        assertEquals("Female", personten.getGender());
+-        assertFalse(personten.getEnabled());
++        assertEquals("Brandyn", personFive.getFirstName());
++        assertEquals("Grasha", personFive.getLastName());
++        assertEquals("96 Mosinee Parkway", personFive.getAddress());
++        assertEquals("Male", personFive.getGender());
++        assertTrue(personFive.getEnabled());
+     }
+ 
+     private void mockPerson() {

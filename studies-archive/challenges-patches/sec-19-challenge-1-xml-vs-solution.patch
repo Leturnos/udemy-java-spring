@@ -1,0 +1,184 @@
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 16-patch-verb/challenge-1-tests-xml/src/main/java/com/udemy/spring_boot/controllers/PersonController.java 16-patch-verb/solution-challenge-1-xml/src/main/java/com/udemy/spring_boot/controllers/PersonController.java
+--- 16-patch-verb/challenge-1-tests-xml/src/main/java/com/udemy/spring_boot/controllers/PersonController.java	2026-11-19 10:11:33.312449695 -0300
++++ 16-patch-verb/solution-challenge-1-xml/src/main/java/com/udemy/spring_boot/controllers/PersonController.java	2026-11-19 10:11:33.323975156 -0300
+@@ -56,6 +56,7 @@
+             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
+             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
+     )
++
+     @Override
+     public PersonDTO update(@PathVariable(value = "id") Long id, @RequestBody PersonDTO person) {
+         person.setId(id);
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 16-patch-verb/challenge-1-tests-xml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/PersonControllerXmlTest.java 16-patch-verb/solution-challenge-1-xml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/PersonControllerXmlTest.java
+--- 16-patch-verb/challenge-1-tests-xml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/PersonControllerXmlTest.java	2026-11-19 10:11:33.315213445 -0300
++++ 16-patch-verb/solution-challenge-1-xml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/PersonControllerXmlTest.java	2026-11-19 10:11:33.326776875 -0300
+@@ -1,6 +1,5 @@
+ package com.udemy.spring_boot.integrationtests.controllers.withxml;
+ 
+-import com.fasterxml.jackson.core.JsonProcessingException;
+ import com.fasterxml.jackson.core.type.TypeReference;
+ import com.fasterxml.jackson.databind.DeserializationFeature;
+ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+@@ -15,6 +14,7 @@
+ import org.junit.jupiter.api.*;
+ import org.springframework.boot.test.context.SpringBootTest;
+ import org.springframework.http.MediaType;
++import com.fasterxml.jackson.core.JsonProcessingException;
+ 
+ import java.util.List;
+ 
+@@ -26,13 +26,15 @@
+ class PersonControllerXmlTest extends AbstractIntegrationTest {
+ 
+     private static RequestSpecification specification;
+-    private static XmlMapper xmlMapper;
++    private static XmlMapper objectMapper;
++
+     private static PersonDTO person;
+ 
+     @BeforeAll
+     static void setUp() {
+-        xmlMapper = new XmlMapper();
+-        xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
++        objectMapper = new XmlMapper();
++        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
++
+         person = new PersonDTO();
+     }
+ 
+@@ -41,29 +43,28 @@
+     void createTest() throws JsonProcessingException {
+         mockPerson();
+ 
+-        // esse specification vale para todos os tests
+         specification = new RequestSpecBuilder()
+-            .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
++            .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_GOOGLE)
+             .setBasePath("/api/person/v1")
+-            .setAccept(MediaType.APPLICATION_XML_VALUE)
+             .setPort(TestConfigs.SERVER_PORT)
+                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+             .build();
+ 
+         var bodyContent = given(specification)
+-            .contentType(MediaType.APPLICATION_XML_VALUE) // request
++            .contentType(MediaType.APPLICATION_XML_VALUE)
++            .accept(MediaType.APPLICATION_XML_VALUE)
+                 .body(person)
+             .when()
+                 .post()
+             .then()
+                 .statusCode(200)
+-                .contentType(MediaType.APPLICATION_XML_VALUE) // response
++                .contentType(MediaType.APPLICATION_XML_VALUE)
+             .extract()
+                 .body()
+                     .asString();
+ 
+-        PersonDTO createdPerson = xmlMapper.readValue(bodyContent, PersonDTO.class);
++        PersonDTO createdPerson = objectMapper.readValue(bodyContent, PersonDTO.class);
+         person = createdPerson;
+ 
+         assertNotNull(createdPerson.getId());
+@@ -74,6 +75,7 @@
+         assertEquals("Helsinki - Finland", createdPerson.getAddress());
+         assertEquals("Male", createdPerson.getGender());
+         assertTrue(createdPerson.getEnabled());
++
+     }
+     
+     @Test
+@@ -83,6 +85,7 @@
+ 
+         var bodyContent = given(specification)
+             .contentType(MediaType.APPLICATION_XML_VALUE)
++            .accept(MediaType.APPLICATION_XML_VALUE)
+                 .body(person)
+                 .pathParam("id", person.getId())
+             .when()
+@@ -94,7 +97,7 @@
+                 .body()
+                     .asString();
+ 
+-        PersonDTO createdPerson = xmlMapper.readValue(bodyContent, PersonDTO.class);
++        PersonDTO createdPerson = objectMapper.readValue(bodyContent, PersonDTO.class);
+         person = createdPerson;
+ 
+         assertNotNull(createdPerson.getId());
+@@ -105,13 +108,16 @@
+         assertEquals("Helsinki - Finland", createdPerson.getAddress());
+         assertEquals("Male", createdPerson.getGender());
+         assertTrue(createdPerson.getEnabled());
++
+     }
+ 
+     @Test
+     @Order(3)
+     void findByIdTest() throws JsonProcessingException {
++
+         var bodyContent = given(specification)
+-                    .contentType(MediaType.APPLICATION_XML_VALUE)
++                .contentType(MediaType.APPLICATION_XML_VALUE)
++                .accept(MediaType.APPLICATION_XML_VALUE)
+                     .pathParam("id", person.getId())
+                 .when()
+                     .get("{id}")
+@@ -122,7 +128,7 @@
+                     .body()
+                         .asString();
+ 
+-        PersonDTO createdPerson = xmlMapper.readValue(bodyContent, PersonDTO.class);
++        PersonDTO createdPerson = objectMapper.readValue(bodyContent, PersonDTO.class);
+         person = createdPerson;
+ 
+         assertNotNull(createdPerson.getId());
+@@ -138,8 +144,9 @@
+     @Test
+     @Order(4)
+     void disableTest() throws JsonProcessingException {
++
+         var bodyContent = given(specification)
+-                    .contentType(MediaType.APPLICATION_XML_VALUE)
++                .accept(MediaType.APPLICATION_XML_VALUE)
+                     .pathParam("id", person.getId())
+                 .when()
+                     .patch("{id}")
+@@ -150,7 +157,7 @@
+                     .body()
+                         .asString();
+ 
+-        PersonDTO createdPerson = xmlMapper.readValue(bodyContent, PersonDTO.class);
++        PersonDTO createdPerson = objectMapper.readValue(bodyContent, PersonDTO.class);
+         person = createdPerson;
+ 
+         assertNotNull(createdPerson.getId());
+@@ -166,6 +173,7 @@
+     @Test
+     @Order(5)
+     void deleteTest() throws JsonProcessingException {
++
+         given(specification)
+                 .pathParam("id", person.getId())
+             .when()
+@@ -190,7 +198,7 @@
+                 .body()
+                 .asString();
+ 
+-        List<PersonDTO> people = xmlMapper.readValue(bodyContent, new TypeReference<List<PersonDTO>>() {});
++        List<PersonDTO> people = objectMapper.readValue(bodyContent, new TypeReference<List<PersonDTO>>() {});
+ 
+         PersonDTO personOne = people.get(0);
+ 
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 16-patch-verb/challenge-1-tests-xml/src/test/java/com/udemy/spring_boot/integrationtests/dto/PersonDTO.java 16-patch-verb/solution-challenge-1-xml/src/test/java/com/udemy/spring_boot/integrationtests/dto/PersonDTO.java
+--- 16-patch-verb/challenge-1-tests-xml/src/test/java/com/udemy/spring_boot/integrationtests/dto/PersonDTO.java	2026-11-19 10:11:33.315213445 -0300
++++ 16-patch-verb/solution-challenge-1-xml/src/test/java/com/udemy/spring_boot/integrationtests/dto/PersonDTO.java	2026-11-19 10:11:33.326776875 -0300
+@@ -7,7 +7,7 @@
+ 
+ // Até poderia herdar esse DTO da aplicação,
+ // mas fazendo dessa forma é mais fácil personalizar
+-@XmlRootElement(name = "person")
++@XmlRootElement
+ public class PersonDTO implements Serializable {
+ 
+     private static final long serialVersionUID = 1L;

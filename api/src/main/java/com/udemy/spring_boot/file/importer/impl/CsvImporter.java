@@ -1,0 +1,48 @@
+package com.udemy.spring_boot.file.importer.impl;
+
+import com.udemy.spring_boot.data.dto.PersonDTO;
+import com.udemy.spring_boot.file.importer.contract.FileImporter;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.springframework.stereotype.Component;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
+public class CsvImporter implements FileImporter {
+
+    @Override
+    public List<PersonDTO> importFile(InputStream inputStream) throws Exception {
+        CSVFormat format = CSVFormat.Builder.create()
+                .setHeader()
+                .setSkipHeaderRecord(true) // cada linha é um record
+                .setIgnoreEmptyLines(true)
+                .setTrim(true)
+                .get();
+
+        try (InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+             CSVParser parser = format.parse(reader)) {
+            return parseRecordsToPersonDTOList(parser);
+        }
+    }
+
+    private List<PersonDTO> parseRecordsToPersonDTOList(Iterable<CSVRecord> records) {
+        List<PersonDTO> people = new ArrayList<>();
+
+        for (CSVRecord record: records) {
+            PersonDTO person = new PersonDTO();
+            person.setFirstName(record.get("first_name"));
+            person.setLastName(record.get("last_name"));
+            person.setAddress(record.get("address"));
+            person.setGender(record.get("gender"));
+            person.setEnabled(true);
+            people.add(person);
+        }
+        return people;
+    }
+}

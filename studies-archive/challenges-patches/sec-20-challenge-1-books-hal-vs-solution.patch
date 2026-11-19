@@ -1,0 +1,106 @@
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/challenge-1-find-all-books-hal/src/main/java/com/udemy/spring_boot/controllers/BookController.java 17-query-params-pagination-hal/solution-challenge-1/src/main/java/com/udemy/spring_boot/controllers/BookController.java
+--- 17-query-params-pagination-hal/challenge-1-find-all-books-hal/src/main/java/com/udemy/spring_boot/controllers/BookController.java	2026-11-19 10:11:33.342572701 -0300
++++ 17-query-params-pagination-hal/solution-challenge-1/src/main/java/com/udemy/spring_boot/controllers/BookController.java	2026-11-19 10:11:33.362077421 -0300
+@@ -14,6 +14,8 @@
+ import org.springframework.http.ResponseEntity;
+ import org.springframework.web.bind.annotation.*;
+ 
++import java.util.List;
++
+ @RestController
+ @RequestMapping("/api/book/v1")
+ @Tag(name = "Book", description = "Endpoints for Managing Book")
+@@ -80,6 +82,7 @@
+         return service.update(book);
+     }
+ 
++
+     @DeleteMapping(value = "/{id}")
+     @Override
+     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/challenge-1-find-all-books-hal/src/main/java/com/udemy/spring_boot/controllers/docs/BookControllerDocs.java 17-query-params-pagination-hal/solution-challenge-1/src/main/java/com/udemy/spring_boot/controllers/docs/BookControllerDocs.java
+--- 17-query-params-pagination-hal/challenge-1-find-all-books-hal/src/main/java/com/udemy/spring_boot/controllers/docs/BookControllerDocs.java	2026-11-19 10:11:33.342745609 -0300
++++ 17-query-params-pagination-hal/solution-challenge-1/src/main/java/com/udemy/spring_boot/controllers/docs/BookControllerDocs.java	2026-11-19 10:11:33.362252130 -0300
+@@ -16,7 +16,7 @@
+ 
+ public interface BookControllerDocs {
+ 
+-    @Operation(summary = "Find All Books",
++    @Operation(summary = "Find All Book",
+             description = "Finds All Book",
+             tags = {"Book"},
+             responses = {
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/challenge-1-find-all-books-hal/src/main/java/com/udemy/spring_boot/services/BookServices.java 17-query-params-pagination-hal/solution-challenge-1/src/main/java/com/udemy/spring_boot/services/BookServices.java
+--- 17-query-params-pagination-hal/challenge-1-find-all-books-hal/src/main/java/com/udemy/spring_boot/services/BookServices.java	2026-11-19 10:11:33.344161140 -0300
++++ 17-query-params-pagination-hal/solution-challenge-1/src/main/java/com/udemy/spring_boot/services/BookServices.java	2026-11-19 10:11:33.363597720 -0300
+@@ -1,9 +1,7 @@
+ package com.udemy.spring_boot.services;
+ 
+ import com.udemy.spring_boot.controllers.BookController;
+-import com.udemy.spring_boot.controllers.PersonController;
+ import com.udemy.spring_boot.data.dto.BookDTO;
+-import com.udemy.spring_boot.data.dto.PersonDTO;
+ import com.udemy.spring_boot.exception.RequiredObjectIsNullException;
+ import com.udemy.spring_boot.exception.ResourceNotFoundException;
+ import com.udemy.spring_boot.model.Book;
+@@ -18,8 +16,6 @@
+ import org.springframework.hateoas.PagedModel;
+ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+ import org.springframework.stereotype.Service;
+-import java.util.List;
+-import static com.udemy.spring_boot.mapper.ObjectMapper.parseListObjects;
+ import static com.udemy.spring_boot.mapper.ObjectMapper.parseObject;
+ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+@@ -36,21 +32,23 @@
+     PagedResourcesAssembler<BookDTO> assembler;
+ 
+     public PagedModel<EntityModel<BookDTO>> findAll(Pageable pageable) {
+-        logger.info("finding all books");
++
++        logger.info("Finding all Books!");
+ 
+         var books = repository.findAll(pageable);
++
+         var booksWithLinks = books.map(book -> {
+             var dto = parseObject(book, BookDTO.class);
+             addHateoasLinks(dto);
+             return dto;
+         });
+ 
+-        Link findAllLink = linkTo(
+-                        methodOn(PersonController.class)
+-                                .findAll(
+-                                        pageable.getPageNumber(),
+-                                        pageable.getPageSize(),
+-                                        String.valueOf(pageable.getSort())))
++        Link findAllLink = WebMvcLinkBuilder.linkTo(
++                WebMvcLinkBuilder.methodOn(BookController.class)
++                        .findAll(
++                            pageable.getPageNumber(),
++                            pageable.getPageSize(),
++                            String.valueOf(pageable.getSort())))
+                 .withSelfRel();
+ 
+         return assembler.toModel(booksWithLinks, findAllLink);
+@@ -107,7 +105,7 @@
+ 
+     private void addHateoasLinks(BookDTO dto) {
+         dto.add(linkTo(methodOn(BookController.class).findById(dto.getId())).withSelfRel().withType("GET"));
+-        dto.add(linkTo(methodOn(BookController.class).findAll(1, 12, "asc")).withRel("findAll").withType("GET"));
++        dto.add(linkTo(methodOn(BookController.class).findAll(0, 12, "asc")).withRel("findAll").withType("GET"));
+         dto.add(linkTo(methodOn(BookController.class).create(dto)).withRel("create").withType("POST"));
+         dto.add(linkTo(methodOn(BookController.class).update(dto.getId(), dto)).withRel("update").withType("PUT"));
+         dto.add(linkTo(methodOn(BookController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/challenge-1-find-all-books-hal/src/test/java/com/udemy/spring_boot/unittests/services/BookServicesTest.java 17-query-params-pagination-hal/solution-challenge-1/src/test/java/com/udemy/spring_boot/unittests/services/BookServicesTest.java
+--- 17-query-params-pagination-hal/challenge-1-find-all-books-hal/src/test/java/com/udemy/spring_boot/unittests/services/BookServicesTest.java	2026-11-19 10:11:33.346967167 -0300
++++ 17-query-params-pagination-hal/solution-challenge-1/src/test/java/com/udemy/spring_boot/unittests/services/BookServicesTest.java	2026-11-19 10:11:33.366775266 -0300
+@@ -246,7 +246,7 @@
+     }
+ 
+     @Test
+-    @Disabled("REASON: WIP")
++    @Disabled("Reason: WIP")
+     void findAll() {
+         List<Book> list = input.mockEntityList();
+         when(repository.findAll()).thenReturn(list);

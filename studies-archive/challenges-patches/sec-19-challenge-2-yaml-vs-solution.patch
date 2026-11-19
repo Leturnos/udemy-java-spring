@@ -1,0 +1,318 @@
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 16-patch-verb/challenge-2-tests-yaml/src/main/java/com/udemy/spring_boot/controllers/PersonController.java 16-patch-verb/solution-challenge-2-yaml/src/main/java/com/udemy/spring_boot/controllers/PersonController.java
+--- 16-patch-verb/challenge-2-tests-yaml/src/main/java/com/udemy/spring_boot/controllers/PersonController.java	2026-11-19 10:11:33.318196510 -0300
++++ 16-patch-verb/solution-challenge-2-yaml/src/main/java/com/udemy/spring_boot/controllers/PersonController.java	2026-11-19 10:11:33.329426373 -0300
+@@ -56,6 +56,7 @@
+             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
+             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
+     )
++
+     @Override
+     public PersonDTO update(@PathVariable(value = "id") Long id, @RequestBody PersonDTO person) {
+         person.setId(id);
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 16-patch-verb/challenge-2-tests-yaml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/mapper/YAMLMapperCustom.java 16-patch-verb/solution-challenge-2-yaml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/mapper/YAMLMapperCustom.java
+--- 16-patch-verb/challenge-2-tests-yaml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/mapper/YAMLMapperCustom.java	2026-11-19 10:11:33.321455889 -0300
++++ 16-patch-verb/solution-challenge-2-yaml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/mapper/YAMLMapperCustom.java	1969-12-31 21:00:00.000000000 -0300
+@@ -1,46 +0,0 @@
+-package com.udemy.spring_boot.integrationtests.controllers.withyaml.mapper;
+-
+-import com.fasterxml.jackson.core.JsonProcessingException;
+-import com.fasterxml.jackson.core.type.TypeReference;
+-import com.fasterxml.jackson.databind.JavaType;
+-import io.restassured.mapper.ObjectMapper;
+-import io.restassured.mapper.ObjectMapperDeserializationContext;
+-import io.restassured.mapper.ObjectMapperSerializationContext;
+-import com.fasterxml.jackson.databind.DeserializationFeature;
+-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+-
+-public class YAMLMapperCustom implements ObjectMapper {
+-
+-    private final YAMLMapper yamlMapper;
+-
+-    public YAMLMapperCustom() {
+-        this.yamlMapper = new YAMLMapper();
+-        this.yamlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+-    }
+-
+-    @Override
+-    public Object deserialize(ObjectMapperDeserializationContext context) {
+-        try {
+-            return yamlMapper.readValue(context.getDataToDeserialize().asString(), (JavaType) context.getType());
+-        } catch (Exception e) {
+-            throw new RuntimeException("Erro ao desserializar YAML", e);
+-        }
+-    }
+-
+-    @Override
+-    public Object serialize(ObjectMapperSerializationContext context) {
+-        try {
+-            return yamlMapper.writeValueAsString(context.getObjectToSerialize());
+-        } catch (Exception e) {
+-            throw new RuntimeException("Erro ao serializar para YAML", e);
+-        }
+-    }
+-
+-    public <T> T readValue(String content, TypeReference<T> valueTypeRef) throws JsonProcessingException {
+-        return yamlMapper.readValue(content, valueTypeRef);
+-    }
+-
+-    public <T> T readValue(String content, Class<T> valueType) throws JsonProcessingException {
+-        return yamlMapper.readValue(content, valueType);
+-    }
+-}
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 16-patch-verb/challenge-2-tests-yaml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/mapper/YAMLMapper.java 16-patch-verb/solution-challenge-2-yaml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/mapper/YAMLMapper.java
+--- 16-patch-verb/challenge-2-tests-yaml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/mapper/YAMLMapper.java	1969-12-31 21:00:00.000000000 -0300
++++ 16-patch-verb/solution-challenge-2-yaml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/mapper/YAMLMapper.java	2026-11-19 10:11:33.333031811 -0300
+@@ -0,0 +1,41 @@
++package com.udemy.spring_boot.integrationtests.controllers.withyaml.mapper;
++
++import com.fasterxml.jackson.core.JsonProcessingException;
++import com.fasterxml.jackson.databind.DeserializationFeature;
++import com.fasterxml.jackson.databind.type.TypeFactory;
++import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
++import io.restassured.mapper.ObjectMapper;
++import io.restassured.mapper.ObjectMapperDeserializationContext;
++import io.restassured.mapper.ObjectMapperSerializationContext;
++
++public class YAMLMapper implements ObjectMapper {
++
++    private com.fasterxml.jackson.databind.ObjectMapper mapper;
++    protected TypeFactory typeFactory;
++
++    public YAMLMapper() {
++        mapper = new com.fasterxml.jackson.databind.ObjectMapper(new YAMLFactory())
++            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
++        typeFactory = TypeFactory.defaultInstance();
++    }
++
++    @Override
++    public Object deserialize(ObjectMapperDeserializationContext context) {
++        var content = context.getDataToDeserialize().asString();
++        Class type = (Class) context.getType();
++        try {
++            return mapper.readValue(content, typeFactory.constructType(type));
++        } catch (JsonProcessingException e) {
++            throw new IllegalArgumentException("Error deserializing YAML content", e);
++        }
++    }
++
++    @Override
++    public Object serialize(ObjectMapperSerializationContext context) {
++        try {
++            return mapper.writeValueAsString(context.getObjectToSerialize());
++        } catch (JsonProcessingException e) {
++            throw new IllegalArgumentException("Error serializing YAML content", e);
++        }
++    }
++}
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 16-patch-verb/challenge-2-tests-yaml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/PersonControllerYamlTest.java 16-patch-verb/solution-challenge-2-yaml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/PersonControllerYamlTest.java
+--- 16-patch-verb/challenge-2-tests-yaml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/PersonControllerYamlTest.java	2026-11-19 10:11:33.320988826 -0300
++++ 16-patch-verb/solution-challenge-2-yaml/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/PersonControllerYamlTest.java	2026-11-19 10:11:33.332511997 -0300
+@@ -1,15 +1,12 @@
+ package com.udemy.spring_boot.integrationtests.controllers.withyaml;
+ 
+-import com.fasterxml.jackson.core.JsonProcessingException;
+-import com.fasterxml.jackson.core.type.TypeReference;
+ import com.udemy.spring_boot.config.TestConfigs;
+-import com.udemy.spring_boot.integrationtests.controllers.withyaml.mapper.YAMLMapperCustom;
++import com.udemy.spring_boot.integrationtests.controllers.withyaml.mapper.YAMLMapper;
+ import com.udemy.spring_boot.integrationtests.dto.PersonDTO;
+ import com.udemy.spring_boot.integrationtests.testcontainer.AbstractIntegrationTest;
+-import io.restassured.RestAssured;
+-import io.restassured.config.RestAssuredConfig;
+ import io.restassured.builder.RequestSpecBuilder;
+ import io.restassured.config.EncoderConfig;
++import io.restassured.config.RestAssuredConfig;
+ import io.restassured.filter.log.LogDetail;
+ import io.restassured.filter.log.RequestLoggingFilter;
+ import io.restassured.filter.log.ResponseLoggingFilter;
+@@ -19,6 +16,7 @@
+ import org.springframework.boot.test.context.SpringBootTest;
+ import org.springframework.http.MediaType;
+ 
++import java.util.Arrays;
+ import java.util.List;
+ 
+ import static io.restassured.RestAssured.given;
+@@ -29,22 +27,19 @@
+ class PersonControllerYamlTest extends AbstractIntegrationTest {
+ 
+     private static RequestSpecification specification;
+-    private static YAMLMapperCustom yamlMapper;
++    private static YAMLMapper objectMapper;
++
+     private static PersonDTO person;
+ 
+     @BeforeAll
+     static void setUp() {
+-        yamlMapper = new YAMLMapperCustom();
++        objectMapper = new YAMLMapper();
+         person = new PersonDTO();
+-
+-        RestAssured.config = RestAssuredConfig.config()
+-            .encoderConfig(EncoderConfig.encoderConfig()
+-            .encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT));
+     }
+ 
+     @Test
+     @Order(1)
+-    void createTest() throws JsonProcessingException {
++    void createTest() {
+         mockPerson();
+ 
+         specification = new RequestSpecBuilder()
+@@ -55,10 +50,15 @@
+                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+             .build();
+ 
+-        var bodyContent = given(specification)
++        var createdPerson = given().config(
++                RestAssuredConfig.config()
++                    .encoderConfig(
++                        EncoderConfig.encoderConfig().
++                            encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
++                ).spec(specification)
+             .contentType(MediaType.APPLICATION_YAML_VALUE)
+             .accept(MediaType.APPLICATION_YAML_VALUE)
+-                .body(person, yamlMapper)
++                .body(person, objectMapper)
+             .when()
+                 .post()
+             .then()
+@@ -66,9 +66,8 @@
+                 .contentType(MediaType.APPLICATION_YAML_VALUE)
+             .extract()
+                 .body()
+-                    .asString();
++                    .as(PersonDTO.class, objectMapper);
+ 
+-        PersonDTO createdPerson = yamlMapper.readValue(bodyContent, PersonDTO.class);
+         person = createdPerson;
+ 
+         assertNotNull(createdPerson.getId());
+@@ -84,13 +83,18 @@
+     
+     @Test
+     @Order(2)
+-    void updateTest() throws JsonProcessingException {
++    void updateTest() {
+         person.setLastName("Benedict Torvalds");
+ 
+-        var bodyContent = given(specification)
++        var createdPerson = given().config(
++                        RestAssuredConfig.config()
++                                .encoderConfig(
++                                        EncoderConfig.encoderConfig().
++                                                encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
++                ).spec(specification)
+             .contentType(MediaType.APPLICATION_YAML_VALUE)
+             .accept(MediaType.APPLICATION_YAML_VALUE)
+-                .body(person, yamlMapper)
++                .body(person, objectMapper)
+                 .pathParam("id", person.getId())
+             .when()
+                 .put("{id}")
+@@ -99,9 +103,8 @@
+                 .contentType(MediaType.APPLICATION_YAML_VALUE)
+             .extract()
+                 .body()
+-                    .asString();
++                .as(PersonDTO.class, objectMapper);
+ 
+-        PersonDTO createdPerson = yamlMapper.readValue(bodyContent, PersonDTO.class);
+         person = createdPerson;
+ 
+         assertNotNull(createdPerson.getId());
+@@ -117,9 +120,14 @@
+ 
+     @Test
+     @Order(3)
+-    void findByIdTest() throws JsonProcessingException {
++    void findByIdTest() {
+ 
+-        var bodyContent = given(specification)
++        var createdPerson = given().config(
++                        RestAssuredConfig.config()
++                                .encoderConfig(
++                                        EncoderConfig.encoderConfig().
++                                                encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
++                ).spec(specification)
+                 .contentType(MediaType.APPLICATION_YAML_VALUE)
+                 .accept(MediaType.APPLICATION_YAML_VALUE)
+                     .pathParam("id", person.getId())
+@@ -130,9 +138,8 @@
+                     .contentType(MediaType.APPLICATION_YAML_VALUE)
+                 .extract()
+                     .body()
+-                        .asString();
++                .as(PersonDTO.class, objectMapper);
+ 
+-        PersonDTO createdPerson = yamlMapper.readValue(bodyContent, PersonDTO.class);
+         person = createdPerson;
+ 
+         assertNotNull(createdPerson.getId());
+@@ -147,9 +154,14 @@
+ 
+     @Test
+     @Order(4)
+-    void disableTest() throws JsonProcessingException {
++    void disableTest() {
+ 
+-        var bodyContent = given(specification)
++        var createdPerson = given().config(
++                        RestAssuredConfig.config()
++                                .encoderConfig(
++                                        EncoderConfig.encoderConfig().
++                                                encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
++                ).spec(specification)
+                 .accept(MediaType.APPLICATION_YAML_VALUE)
+                     .pathParam("id", person.getId())
+                 .when()
+@@ -159,9 +171,8 @@
+                     .contentType(MediaType.APPLICATION_YAML_VALUE)
+                 .extract()
+                     .body()
+-                        .asString();
++                .as(PersonDTO.class, objectMapper);
+ 
+-        PersonDTO createdPerson = yamlMapper.readValue(bodyContent, PersonDTO.class);
+         person = createdPerson;
+ 
+         assertNotNull(createdPerson.getId());
+@@ -176,7 +187,7 @@
+ 
+     @Test
+     @Order(5)
+-    void deleteTest() throws JsonProcessingException {
++    void deleteTest() {
+ 
+         given(specification)
+                 .pathParam("id", person.getId())
+@@ -189,20 +200,20 @@
+ 
+     @Test
+     @Order(6)
+-    void findAllTest() throws JsonProcessingException {
++    void findAllTest() {
+ 
+-        var bodyContent = given(specification)
++        var response = given(specification)
+                 .accept(MediaType.APPLICATION_YAML_VALUE)
+                 .when()
+-                    .get()
++                .get()
+                 .then()
+-                    .statusCode(200)
+-                    .contentType(MediaType.APPLICATION_YAML_VALUE)
++                .statusCode(200)
++                .contentType(MediaType.APPLICATION_YAML_VALUE)
+                 .extract()
+-                    .body()
+-                        .asString();
++                .body()
++                .as(PersonDTO[].class, objectMapper);
+ 
+-        List<PersonDTO> people = yamlMapper.readValue(bodyContent, new TypeReference<List<PersonDTO>>() {});
++        List<PersonDTO> people = Arrays.asList(response);
+ 
+         PersonDTO personOne = people.get(0);
+ 

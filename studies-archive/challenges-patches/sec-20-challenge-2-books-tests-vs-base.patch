@@ -1,0 +1,1182 @@
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withjson/BookControllerJsonTest.java 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withjson/BookControllerJsonTest.java
+--- 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withjson/BookControllerJsonTest.java	2026-11-19 10:11:33.338892313 -0300
++++ 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withjson/BookControllerJsonTest.java	2026-11-19 10:11:33.351559696 -0300
+@@ -16,7 +16,10 @@
+ import org.springframework.boot.test.context.SpringBootTest;
+ import org.springframework.http.MediaType;
+ 
++import java.text.ParseException;
++import java.text.SimpleDateFormat;
+ import java.util.Date;
++import java.util.List;
+ 
+ import static io.restassured.RestAssured.given;
+ import static org.junit.jupiter.api.Assertions.*;
+@@ -27,62 +30,65 @@
+ 
+     private static RequestSpecification specification;
+     private static ObjectMapper objectMapper;
+-
+-    private static BookDTO book;
++    private static BookDTO bookDTO;
+ 
+     @BeforeAll
+     static void setUp() {
+         objectMapper = new ObjectMapper();
+         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+ 
+-        book = new BookDTO();
++        bookDTO = new BookDTO();
+     }
+ 
+     @Test
+     @Order(1)
+-    void createTest() throws JsonProcessingException {
++    void createTest() throws JsonProcessingException, ParseException {
+         mockBook();
+ 
++        // esse specification vale para todos os tests
+         specification = new RequestSpecBuilder()
+-            .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_GOOGLE)
++            .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+             .setBasePath("/api/book/v1")
+             .setPort(TestConfigs.SERVER_PORT)
+                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+             .build();
+ 
+-        var content = given(specification)
+-            .contentType(MediaType.APPLICATION_JSON_VALUE)
+-                .body(book)
++        var bodyContent = given(specification)
++            .contentType(MediaType.APPLICATION_JSON_VALUE) // request
++                .body(bookDTO)
+             .when()
+                 .post()
+             .then()
+                 .statusCode(200)
+-                .contentType(MediaType.APPLICATION_JSON_VALUE)
++                .contentType(MediaType.APPLICATION_JSON_VALUE) // response
+             .extract()
+                 .body()
+                     .asString();
+ 
+-        BookDTO createdBook = objectMapper.readValue(content, BookDTO.class);
+-        book = createdBook;
++        BookDTO createdBook = objectMapper.readValue(bodyContent, BookDTO.class);
++        bookDTO = createdBook;
+ 
+         assertNotNull(createdBook.getId());
+-        assertNotNull(book.getId());
+-        assertEquals("Docker Deep Dive", book.getTitle());
+-        assertEquals("Nigel Poulton", book.getAuthor());
+-        assertEquals(55.99, book.getPrice());
++        assertTrue(createdBook.getId() > 0);
++
++        assertEquals("Joshua Bloch", createdBook.getAuthor());
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
++        String formattedDate = sdf.format(createdBook.getLaunchDate());
++        assertEquals("06/01/2018", formattedDate);
++        assertEquals(249.90, createdBook.getPrice());
++        assertEquals("Effective Java", createdBook.getTitle());
+     }
+     
+     @Test
+     @Order(2)
+     void updateTest() throws JsonProcessingException {
++        bookDTO.setPrice(250.0);
+ 
+-        book.setTitle("Docker Deep Dive - Updated");
+-
+-        var content = given(specification)
++        var bodyContent = given(specification)
+             .contentType(MediaType.APPLICATION_JSON_VALUE)
+-                .body(book)
+-                .pathParam("id", book.getId())
++                .body(bookDTO)
++                .pathParam("id", bookDTO.getId())
+             .when()
+                 .put("{id}")
+             .then()
+@@ -92,26 +98,26 @@
+                 .body()
+                     .asString();
+ 
+-        BookDTO createdBook = objectMapper.readValue(content, BookDTO.class);
+-        book = createdBook;
++        BookDTO createdBook = objectMapper.readValue(bodyContent, BookDTO.class);
++        bookDTO = createdBook;
+ 
+         assertNotNull(createdBook.getId());
+         assertTrue(createdBook.getId() > 0);
+ 
+-        assertNotNull(createdBook.getId());
+-        assertNotNull(book.getId());
+-        assertEquals("Docker Deep Dive - Updated", book.getTitle());
+-        assertEquals("Nigel Poulton", book.getAuthor());
+-        assertEquals(55.99, book.getPrice());
++        assertEquals("Joshua Bloch", createdBook.getAuthor());
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
++        String formattedDate = sdf.format(createdBook.getLaunchDate());
++        assertEquals("06/01/2018", formattedDate);
++        assertEquals(250.0, createdBook.getPrice());
++        assertEquals("Effective Java", createdBook.getTitle());
+     }
+ 
+     @Test
+     @Order(3)
+     void findByIdTest() throws JsonProcessingException {
+-
+-        var content = given(specification)
++        var bodyContent = given(specification)
+                     .contentType(MediaType.APPLICATION_JSON_VALUE)
+-                    .pathParam("id", book.getId())
++                    .pathParam("id", bookDTO.getId())
+                 .when()
+                     .get("{id}")
+                 .then()
+@@ -121,25 +127,25 @@
+                     .body()
+                         .asString();
+ 
+-        BookDTO createdBook = objectMapper.readValue(content, BookDTO.class);
+-        book = createdBook;
++        BookDTO createdBook = objectMapper.readValue(bodyContent, BookDTO.class);
++        bookDTO = createdBook;
+ 
+         assertNotNull(createdBook.getId());
+         assertTrue(createdBook.getId() > 0);
+ 
+-        assertNotNull(createdBook.getId());
+-        assertNotNull(book.getId());
+-        assertEquals("Docker Deep Dive - Updated", book.getTitle());
+-        assertEquals("Nigel Poulton", book.getAuthor());
+-        assertEquals(55.99, book.getPrice());
++        assertEquals("Joshua Bloch", createdBook.getAuthor());
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
++        String formattedDate = sdf.format(createdBook.getLaunchDate());
++        assertEquals("06/01/2018", formattedDate);
++        assertEquals(250.0, createdBook.getPrice());
++        assertEquals("Effective Java", createdBook.getTitle());
+     }
+ 
+     @Test
+     @Order(4)
+     void deleteTest() {
+-
+         given(specification)
+-                .pathParam("id", book.getId())
++                .pathParam("id", bookDTO.getId())
+             .when()
+                 .delete("{id}")
+             .then()
+@@ -151,9 +157,9 @@
+     @Order(5)
+     void findAllTest() throws JsonProcessingException {
+ 
+-        var content = given(specification)
++        var bodyContent = given(specification)
+                 .accept(MediaType.APPLICATION_JSON_VALUE)
+-                .queryParams("page", 0 , "size", 12, "direction", "asc")
++                .queryParam("page", 0, "size", 12, "direction", "asc")
+                 .when()
+                 .get()
+                 .then()
+@@ -163,36 +169,40 @@
+                 .body()
+                 .asString();
+ 
+-        BookHalPagedModel wrapper = objectMapper.readValue(content, BookHalPagedModel.class);
+-        var books = wrapper.getEmbedded().getBooks();
++        BookHalPagedModel wrapper = objectMapper.readValue(bodyContent, BookHalPagedModel.class);
++        List<BookDTO> book = wrapper.getEmbeddedDTO().getBook();
+ 
+-        BookDTO bookOne = books.get(0);
++        BookDTO bookOne = book.get(0);
+ 
+         assertNotNull(bookOne.getId());
+-        assertNotNull(bookOne.getTitle());
+-        assertNotNull(bookOne.getAuthor());
+-        assertNotNull(bookOne.getPrice());
+         assertTrue(bookOne.getId() > 0);
+-        assertEquals("Big Data: como extrair volume, variedade, velocidade e valor da avalanche de informação cotidiana", bookOne.getTitle());
+-        assertEquals("Viktor Mayer-Schonberger e Kenneth Kukier", bookOne.getAuthor());
+-        assertEquals(54.00, bookOne.getPrice());
+-
+-        BookDTO foundBookFive = books.get(4);
+ 
+-        assertNotNull(foundBookFive.getId());
+-        assertNotNull(foundBookFive.getTitle());
+-        assertNotNull(foundBookFive.getAuthor());
+-        assertNotNull(foundBookFive.getPrice());
+-        assertTrue(foundBookFive.getId() > 0);
+-        assertEquals("Domain Driven Design", foundBookFive.getTitle());
+-        assertEquals("Eric Evans", foundBookFive.getAuthor());
+-        assertEquals(92.00, foundBookFive.getPrice());
+-    }
+-
+-    private void mockBook() {
+-        book.setTitle("Docker Deep Dive");
+-        book.setAuthor("Nigel Poulton");
+-        book.setPrice(Double.valueOf(55.99));
+-        book.setLaunchDate(new Date());
++        assertEquals("Viktor Mayer-Schonberger e Kenneth Kukier", bookOne.getAuthor());
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
++        String formattedDate = sdf.format(bookOne.getLaunchDate());
++        assertEquals("07/11/2017", formattedDate);
++        assertEquals(54.0, bookOne.getPrice());
++        assertEquals("Big Data: como extrair volume, variedade," +
++                " velocidade e valor da avalanche de informação cotidiana", bookOne.getTitle());
++
++        BookDTO bookten = book.get(9);
++
++        assertNotNull(bookten.getId());
++        assertTrue(bookten.getId() > 0);
++
++        assertEquals("Crockford", bookten.getAuthor());
++        assertEquals("07/11/2017", formattedDate);
++        assertEquals(67.0, bookten.getPrice());
++        assertEquals("JavaScript", bookten.getTitle());
++    }
++
++    private void mockBook() throws ParseException {
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
++
++        bookDTO.setAuthor("Joshua Bloch");
++        Date date = sdf.parse("06/01/2018");
++        bookDTO.setLaunchDate(date);
++        bookDTO.setPrice(249.90);
++        bookDTO.setTitle("Effective Java");
+     }
+ }
+\ Nenhum caractere de nova linha no final do arquivo
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withjson/PersonControllerJsonTest.java 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withjson/PersonControllerJsonTest.java
+--- 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withjson/PersonControllerJsonTest.java	2026-11-19 10:11:33.339220298 -0300
++++ 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withjson/PersonControllerJsonTest.java	2026-11-19 10:11:33.351791963 -0300
+@@ -165,7 +165,7 @@
+ 
+     @Test
+     @Order(5)
+-    void deleteTest() {
++    void deleteTest() throws JsonProcessingException {
+         given(specification)
+                 .pathParam("id", person.getId())
+             .when()
+@@ -205,59 +205,16 @@
+         assertEquals("Male", personOne.getGender());
+         assertFalse(personOne.getEnabled());
+ 
+-        PersonDTO personTen = people.get(9);
++        PersonDTO personten = people.get(9);
+ 
+-        assertNotNull(personTen.getId());
+-        assertTrue(personTen.getId() > 0);
++        assertNotNull(personten.getId());
++        assertTrue(personten.getId() > 0);
+ 
+-        assertEquals("Arlena", personTen.getFirstName());
+-        assertEquals("Servante", personTen.getLastName());
+-        assertEquals("35162 Mayer Pass", personTen.getAddress());
+-        assertEquals("Female", personTen.getGender());
+-        assertFalse(personTen.getEnabled());
+-    }
+-
+-    @Test
+-    @Order(7)
+-    void findByNameTest() throws JsonProcessingException {
+-
+-        var bodyContent = given(specification)
+-                .accept(MediaType.APPLICATION_JSON_VALUE)
+-                .pathParam("firstName", "and")
+-                .queryParam("page", 0, "size", 12, "direction", "desc")
+-                .when()
+-                .get("findPeopleByName/{firstName}")
+-                .then()
+-                .statusCode(200)
+-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+-                .extract()
+-                .body()
+-                .asString();
+-
+-        PersonHalPagedModel wrapper = objectMapper.readValue(bodyContent, PersonHalPagedModel.class);
+-        List<PersonDTO> people = wrapper.getEmbeddedDTO().getPeople();
+-
+-        PersonDTO personOne = people.get(0);
+-
+-        assertNotNull(personOne.getId());
+-        assertTrue(personOne.getId() > 0);
+-
+-        assertEquals("Alessandro", personOne.getFirstName());
+-        assertEquals("McFaul", personOne.getLastName());
+-        assertEquals("5 Lukken Plaza", personOne.getAddress());
+-        assertEquals("Male", personOne.getGender());
+-        assertTrue(personOne.getEnabled());
+-
+-        PersonDTO personTen = people.get(9);
+-
+-        assertNotNull(personTen.getId());
+-        assertTrue(personTen.getId() > 0);
+-
+-        assertEquals("Leland", personTen.getFirstName());
+-        assertEquals("Bedo", personTen.getLastName());
+-        assertEquals("852 Atwood Park", personTen.getAddress());
+-        assertEquals("Female", personTen.getGender());
+-        assertFalse(personTen.getEnabled());
++        assertEquals("Arlena", personten.getFirstName());
++        assertEquals("Servante", personten.getLastName());
++        assertEquals("35162 Mayer Pass", personten.getAddress());
++        assertEquals("Female", personten.getGender());
++        assertFalse(personten.getEnabled());
+     }
+ 
+     private void mockPerson() {
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/BookControllerXmlTest.java 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/BookControllerXmlTest.java
+--- 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/BookControllerXmlTest.java	2026-11-19 10:11:33.339220298 -0300
++++ 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/BookControllerXmlTest.java	2026-11-19 10:11:33.351791963 -0300
+@@ -5,7 +5,9 @@
+ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+ import com.udemy.spring_boot.config.TestConfigs;
+ import com.udemy.spring_boot.integrationtests.dto.BookDTO;
++import com.udemy.spring_boot.integrationtests.dto.PersonDTO;
+ import com.udemy.spring_boot.integrationtests.dto.Wrapper.BookPagedModel;
++import com.udemy.spring_boot.integrationtests.dto.Wrapper.PersonPagedModel;
+ import com.udemy.spring_boot.integrationtests.testcontainer.AbstractIntegrationTest;
+ import io.restassured.builder.RequestSpecBuilder;
+ import io.restassured.filter.log.LogDetail;
+@@ -16,7 +18,10 @@
+ import org.springframework.boot.test.context.SpringBootTest;
+ import org.springframework.http.MediaType;
+ 
++import java.text.ParseException;
++import java.text.SimpleDateFormat;
+ import java.util.Date;
++import java.util.List;
+ 
+ import static io.restassured.RestAssured.given;
+ import static org.junit.jupiter.api.Assertions.*;
+@@ -28,110 +33,118 @@
+     private static RequestSpecification specification;
+     private static XmlMapper objectMapper;
+ 
+-    private static BookDTO book;
++    private static BookDTO bookDTO;
+ 
+     @BeforeAll
+     static void setUp() {
+         objectMapper = new XmlMapper();
+         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+ 
+-        book = new BookDTO();
++        bookDTO = new BookDTO();
+     }
+ 
+     @Test
+     @Order(1)
+-    void createTest() throws JsonProcessingException {
++    void createTest() throws JsonProcessingException, ParseException {
+         mockBook();
+ 
+         specification = new RequestSpecBuilder()
+-            .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_GOOGLE)
+-            .setBasePath("/api/book/v1")
+-            .setPort(TestConfigs.SERVER_PORT)
++                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_GOOGLE)
++                .setBasePath("/api/book/v1")
++                .setPort(TestConfigs.SERVER_PORT)
+                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+-            .build();
++                .build();
+ 
+-        var content = given(specification)
+-            .contentType(MediaType.APPLICATION_XML_VALUE)
+-            .accept(MediaType.APPLICATION_XML_VALUE)
+-                .body(book)
+-            .when()
++        var bodyContent = given(specification)
++                .contentType(MediaType.APPLICATION_XML_VALUE)
++                .accept(MediaType.APPLICATION_XML_VALUE)
++                .body(bookDTO)
++                .when()
+                 .post()
+-            .then()
++                .then()
+                 .statusCode(200)
+                 .contentType(MediaType.APPLICATION_XML_VALUE)
+-            .extract()
++                .extract()
+                 .body()
+-                    .asString();
++                .asString();
+ 
+-        BookDTO createdBook = objectMapper.readValue(content, BookDTO.class);
+-        book = createdBook;
++        BookDTO createdBook = objectMapper.readValue(bodyContent, BookDTO.class);
++        bookDTO = createdBook;
+ 
+         assertNotNull(createdBook.getId());
+-        assertNotNull(book.getId());
+-        assertEquals("Docker Deep Dive", book.getTitle());
+-        assertEquals("Nigel Poulton", book.getAuthor());
+-        assertEquals(55.99, book.getPrice());
++        assertTrue(createdBook.getId() > 0);
++
++        assertEquals("Joshua Bloch", createdBook.getAuthor());
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
++        String formattedDate = sdf.format(createdBook.getLaunchDate());
++        assertEquals("06/01/2018", formattedDate);
++        assertEquals(249.90, createdBook.getPrice());
++        assertEquals("Effective Java", createdBook.getTitle());
+     }
+-    
++
+     @Test
+     @Order(2)
+     void updateTest() throws JsonProcessingException {
++        bookDTO.setPrice(250.0);
+ 
+-        book.setTitle("Docker Deep Dive - Updated");
+-
+-        var content = given(specification)
+-            .contentType(MediaType.APPLICATION_XML_VALUE)
+-            .accept(MediaType.APPLICATION_XML_VALUE)
+-                .body(book)
+-                .pathParam("id", book.getId())
+-            .when()
++        var bodyContent = given(specification)
++                .contentType(MediaType.APPLICATION_XML_VALUE)
++                .accept(MediaType.APPLICATION_XML_VALUE)
++                .body(bookDTO)
++                .pathParam("id", bookDTO.getId())
++                .when()
+                 .put("{id}")
+-            .then()
++                .then()
+                 .statusCode(200)
+                 .contentType(MediaType.APPLICATION_XML_VALUE)
+-            .extract()
++                .extract()
+                 .body()
+-                    .asString();
++                .asString();
+ 
+-        BookDTO createdBook = objectMapper.readValue(content, BookDTO.class);
+-        book = createdBook;
++        BookDTO createdBook = objectMapper.readValue(bodyContent, BookDTO.class);
++        bookDTO = createdBook;
+ 
+         assertNotNull(createdBook.getId());
+-        assertNotNull(book.getId());
+-        assertEquals("Docker Deep Dive - Updated", book.getTitle());
+-        assertEquals("Nigel Poulton", book.getAuthor());
+-        assertEquals(55.99, book.getPrice());
++        assertTrue(createdBook.getId() > 0);
++
++        assertEquals("Joshua Bloch", createdBook.getAuthor());
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
++        String formattedDate = sdf.format(createdBook.getLaunchDate());
++        assertEquals("06/01/2018", formattedDate);
++        assertEquals(250.0, createdBook.getPrice());
++        assertEquals("Effective Java", createdBook.getTitle());
+     }
+ 
+     @Test
+     @Order(3)
+     void findByIdTest() throws JsonProcessingException {
+ 
+-        var content = given(specification)
++        var bodyContent = given(specification)
+                 .contentType(MediaType.APPLICATION_XML_VALUE)
+                 .accept(MediaType.APPLICATION_XML_VALUE)
+-                    .pathParam("id", book.getId())
++                .pathParam("id", bookDTO.getId())
+                 .when()
+-                    .get("{id}")
++                .get("{id}")
+                 .then()
+-                    .statusCode(200)
+-                    .contentType(MediaType.APPLICATION_XML_VALUE)
++                .statusCode(200)
++                .contentType(MediaType.APPLICATION_XML_VALUE)
+                 .extract()
+-                    .body()
+-                        .asString();
++                .body()
++                .asString();
+ 
+-        BookDTO createdBook = objectMapper.readValue(content, BookDTO.class);
+-        book = createdBook;
++        BookDTO createdBook = objectMapper.readValue(bodyContent, BookDTO.class);
++        bookDTO = createdBook;
+ 
+         assertNotNull(createdBook.getId());
+         assertTrue(createdBook.getId() > 0);
+ 
+-        assertNotNull(createdBook.getId());
+-        assertNotNull(book.getId());
+-        assertEquals("Docker Deep Dive - Updated", book.getTitle());
+-        assertEquals("Nigel Poulton", book.getAuthor());
+-        assertEquals(55.99, book.getPrice());
++        assertEquals("Joshua Bloch", createdBook.getAuthor());
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
++        String formattedDate = sdf.format(createdBook.getLaunchDate());
++        assertEquals("06/01/2018", formattedDate);
++        assertEquals(250.0, createdBook.getPrice());
++        assertEquals("Effective Java", createdBook.getTitle());
+     }
+ 
+     @Test
+@@ -139,21 +152,20 @@
+     void deleteTest() {
+ 
+         given(specification)
+-                .pathParam("id", book.getId())
+-            .when()
++                .pathParam("id", bookDTO.getId())
++                .when()
+                 .delete("{id}")
+-            .then()
++                .then()
+                 .statusCode(204);
+     }
+ 
+-
+     @Test
+     @Order(5)
+     void findAllTest() throws JsonProcessingException {
+ 
+-        var content = given(specification)
++        var bodyContent = given(specification)
+                 .accept(MediaType.APPLICATION_XML_VALUE)
+-                .queryParams("page", 0 , "size", 12, "direction", "asc")
++                .queryParam("page", 0, "size", 12, "direction", "asc")
+                 .when()
+                 .get()
+                 .then()
+@@ -163,36 +175,40 @@
+                 .body()
+                 .asString();
+ 
+-        BookPagedModel wrapper = objectMapper.readValue(content, BookPagedModel.class);
+-        var books = wrapper.getContent();
++        BookPagedModel wrapper = objectMapper.readValue(bodyContent, BookPagedModel.class);
++        List<BookDTO> book = wrapper.getContent();
+ 
+-        BookDTO bookOne = books.get(0);
++        BookDTO bookOne = book.get(0);
+ 
+         assertNotNull(bookOne.getId());
+-        assertNotNull(bookOne.getTitle());
+-        assertNotNull(bookOne.getAuthor());
+-        assertNotNull(bookOne.getPrice());
+         assertTrue(bookOne.getId() > 0);
+-        assertEquals("Big Data: como extrair volume, variedade, velocidade e valor da avalanche de informação cotidiana", bookOne.getTitle());
+-        assertEquals("Viktor Mayer-Schonberger e Kenneth Kukier", bookOne.getAuthor());
+-        assertEquals(54.00, bookOne.getPrice());
+-
+-        BookDTO foundBookFive = books.get(4);
+ 
+-        assertNotNull(foundBookFive.getId());
+-        assertNotNull(foundBookFive.getTitle());
+-        assertNotNull(foundBookFive.getAuthor());
+-        assertNotNull(foundBookFive.getPrice());
+-        assertTrue(foundBookFive.getId() > 0);
+-        assertEquals("Domain Driven Design", foundBookFive.getTitle());
+-        assertEquals("Eric Evans", foundBookFive.getAuthor());
+-        assertEquals(92.00, foundBookFive.getPrice());
+-    }
+-
+-    private void mockBook() {
+-        book.setTitle("Docker Deep Dive");
+-        book.setAuthor("Nigel Poulton");
+-        book.setPrice(Double.valueOf(55.99));
+-        book.setLaunchDate(new Date());
++        assertEquals("Viktor Mayer-Schonberger e Kenneth Kukier", bookOne.getAuthor());
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
++        String formattedDate = sdf.format(bookOne.getLaunchDate());
++        assertEquals("07/11/2017", formattedDate);
++        assertEquals(54.0, bookOne.getPrice());
++        assertEquals("Big Data: como extrair volume, variedade," +
++                " velocidade e valor da avalanche de informação cotidiana", bookOne.getTitle());
++
++        BookDTO bookten = book.get(9);
++
++        assertNotNull(bookten.getId());
++        assertTrue(bookten.getId() > 0);
++
++        assertEquals("Crockford", bookten.getAuthor());
++        assertEquals("07/11/2017", formattedDate);
++        assertEquals(67.0, bookten.getPrice());
++        assertEquals("JavaScript", bookten.getTitle());
++    }
++
++    private void mockBook() throws ParseException {
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
++
++        bookDTO.setAuthor("Joshua Bloch");
++        Date date = sdf.parse("06/01/2018");
++        bookDTO.setLaunchDate(date);
++        bookDTO.setPrice(249.90);
++        bookDTO.setTitle("Effective Java");
+     }
+ }
+\ Nenhum caractere de nova linha no final do arquivo
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/PersonControllerXmlTest.java 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/PersonControllerXmlTest.java
+--- 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/PersonControllerXmlTest.java	2026-11-19 10:11:33.339447688 -0300
++++ 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withxml/PersonControllerXmlTest.java	2026-11-19 10:11:33.352015813 -0300
+@@ -225,49 +225,6 @@
+         assertFalse(personten.getEnabled());
+     }
+ 
+-    @Test
+-    @Order(7)
+-    void findByNameTest() throws JsonProcessingException {
+-
+-        var content = given(specification)
+-                .accept(MediaType.APPLICATION_XML_VALUE)
+-                .pathParam("firstName", "and")
+-                .queryParams("page", 0, "size", 12, "direction", "asc")
+-                .when()
+-                .get("findPeopleByName/{firstName}")
+-                .then()
+-                .statusCode(200)
+-                .contentType(MediaType.APPLICATION_XML_VALUE)
+-                .extract()
+-                .body()
+-                .asString();
+-
+-        PersonPagedModel wrapper = objectMapper.readValue(content, PersonPagedModel.class);
+-        List<PersonDTO> people = wrapper.getContent();
+-
+-        PersonDTO personOne = people.get(0);
+-
+-        assertNotNull(personOne.getId());
+-        assertTrue(personOne.getId() > 0);
+-
+-        assertEquals("Alessandro", personOne.getFirstName());
+-        assertEquals("McFaul", personOne.getLastName());
+-        assertEquals("5 Lukken Plaza", personOne.getAddress());
+-        assertEquals("Male", personOne.getGender());
+-        assertTrue(personOne.getEnabled());
+-
+-        PersonDTO personFive = people.get(4);
+-
+-        assertNotNull(personFive.getId());
+-        assertTrue(personFive.getId() > 0);
+-
+-        assertEquals("Brandyn", personFive.getFirstName());
+-        assertEquals("Grasha", personFive.getLastName());
+-        assertEquals("96 Mosinee Parkway", personFive.getAddress());
+-        assertEquals("Male", personFive.getGender());
+-        assertTrue(personFive.getEnabled());
+-    }
+-
+     private void mockPerson() {
+         person.setFirstName("Linus");
+         person.setLastName("Torvalds");
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/BookControllerYamlTest.java 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/BookControllerYamlTest.java
+--- 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/BookControllerYamlTest.java	2026-11-19 10:11:33.339447688 -0300
++++ 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/BookControllerYamlTest.java	2026-11-19 10:11:33.352015813 -0300
+@@ -1,6 +1,5 @@
+ package com.udemy.spring_boot.integrationtests.controllers.withyaml;
+ 
+-import com.fasterxml.jackson.core.JsonProcessingException;
+ import com.udemy.spring_boot.config.TestConfigs;
+ import com.udemy.spring_boot.integrationtests.controllers.withyaml.mapper.YAMLMapper;
+ import com.udemy.spring_boot.integrationtests.dto.BookDTO;
+@@ -18,13 +17,14 @@
+ import org.springframework.boot.test.context.SpringBootTest;
+ import org.springframework.http.MediaType;
+ 
++import java.text.ParseException;
++import java.text.SimpleDateFormat;
+ import java.util.Date;
+ import java.util.List;
+ 
+ import static io.restassured.RestAssured.given;
+ import static org.junit.jupiter.api.Assertions.*;
+ 
+-@Nested
+ @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+ @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+ class BookControllerYamlTest extends AbstractIntegrationTest {
+@@ -32,17 +32,17 @@
+     private static RequestSpecification specification;
+     private static YAMLMapper objectMapper;
+ 
+-    private static BookDTO book;
++    private static BookDTO bookDTO;
+ 
+     @BeforeAll
+     static void setUp() {
+         objectMapper = new YAMLMapper();
+-        book = new BookDTO();
++        bookDTO = new BookDTO();
+     }
+ 
+     @Test
+     @Order(1)
+-    void createTest() {
++    void createTest() throws ParseException {
+         mockBook();
+ 
+         specification = new RequestSpecBuilder()
+@@ -61,7 +61,7 @@
+                 ).spec(specification)
+             .contentType(MediaType.APPLICATION_YAML_VALUE)
+             .accept(MediaType.APPLICATION_YAML_VALUE)
+-                .body(book, objectMapper)
++                .body(bookDTO, objectMapper)
+             .when()
+                 .post()
+             .then()
+@@ -71,21 +71,23 @@
+                 .body()
+                     .as(BookDTO.class, objectMapper);
+ 
+-        book = createdBook;
++        bookDTO = createdBook;
+ 
+         assertNotNull(createdBook.getId());
+-        assertNotNull(book.getId());
+-        assertEquals("Docker Deep Dive", book.getTitle());
+-        assertEquals("Nigel Poulton", book.getAuthor());
+-        assertEquals(55.99, book.getPrice());
++        assertTrue(createdBook.getId() > 0);
+ 
++        assertEquals("Joshua Bloch", createdBook.getAuthor());
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
++        String formattedDate = sdf.format(createdBook.getLaunchDate());
++        assertEquals("06/01/2018", formattedDate);
++        assertEquals(249.90, createdBook.getPrice());
++        assertEquals("Effective Java", createdBook.getTitle());
+     }
+     
+     @Test
+     @Order(2)
+     void updateTest() {
+-
+-        book.setTitle("Docker Deep Dive - Updated");
++        bookDTO.setPrice(250.0);
+ 
+         var createdBook = given().config(
+                         RestAssuredConfig.config()
+@@ -95,8 +97,8 @@
+                 ).spec(specification)
+             .contentType(MediaType.APPLICATION_YAML_VALUE)
+             .accept(MediaType.APPLICATION_YAML_VALUE)
+-                .body(book, objectMapper)
+-                .pathParam("id", book.getId())
++                .body(bookDTO, objectMapper)
++                .pathParam("id", bookDTO.getId())
+             .when()
+                 .put("{id}")
+             .then()
+@@ -106,14 +108,17 @@
+                 .body()
+                 .as(BookDTO.class, objectMapper);
+ 
+-        book = createdBook;
++        bookDTO = createdBook;
+ 
+         assertNotNull(createdBook.getId());
+-        assertNotNull(book.getId());
+-        assertEquals("Docker Deep Dive - Updated", book.getTitle());
+-        assertEquals("Nigel Poulton", book.getAuthor());
+-        assertEquals(55.99, book.getPrice());
++        assertTrue(createdBook.getId() > 0);
+ 
++        assertEquals("Joshua Bloch", createdBook.getAuthor());
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
++        String formattedDate = sdf.format(createdBook.getLaunchDate());
++        assertEquals("06/01/2018", formattedDate);
++        assertEquals(250.0, createdBook.getPrice());
++        assertEquals("Effective Java", createdBook.getTitle());
+     }
+ 
+     @Test
+@@ -128,7 +133,7 @@
+                 ).spec(specification)
+                 .contentType(MediaType.APPLICATION_YAML_VALUE)
+                 .accept(MediaType.APPLICATION_YAML_VALUE)
+-                    .pathParam("id", book.getId())
++                    .pathParam("id", bookDTO.getId())
+                 .when()
+                     .get("{id}")
+                 .then()
+@@ -138,24 +143,24 @@
+                     .body()
+                 .as(BookDTO.class, objectMapper);
+ 
+-        book = createdBook;
++        bookDTO = createdBook;
+ 
+         assertNotNull(createdBook.getId());
+         assertTrue(createdBook.getId() > 0);
+ 
+-        assertNotNull(createdBook.getId());
+-        assertNotNull(book.getId());
+-        assertEquals("Docker Deep Dive - Updated", book.getTitle());
+-        assertEquals("Nigel Poulton", book.getAuthor());
+-        assertEquals(55.99, book.getPrice());
++        assertEquals("Joshua Bloch", createdBook.getAuthor());
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
++        String formattedDate = sdf.format(createdBook.getLaunchDate());
++        assertEquals("06/01/2018", formattedDate);
++        assertEquals(250.0, createdBook.getPrice());
++        assertEquals("Effective Java", createdBook.getTitle());
+     }
+ 
+     @Test
+     @Order(4)
+     void deleteTest() {
+-
+         given(specification)
+-                .pathParam("id", book.getId())
++                .pathParam("id", bookDTO.getId())
+             .when()
+                 .delete("{id}")
+             .then()
+@@ -165,11 +170,11 @@
+ 
+     @Test
+     @Order(5)
+-    void findAllTest() {
++    void findAllTest() throws ParseException {
+ 
+         var response = given(specification)
+                 .accept(MediaType.APPLICATION_YAML_VALUE)
+-                .queryParams("page", 0 , "size", 12, "direction", "asc")
++                .queryParam("page", 0, "size", 12, "direction", "asc")
+                 .when()
+                 .get()
+                 .then()
+@@ -179,35 +184,39 @@
+                 .body()
+                 .as(BookPagedModel.class, objectMapper);
+ 
+-        List<BookDTO> content = response.getContent();
++        List<BookDTO> book = response.getContent();
++
++        BookDTO bookOne = book.get(0);
++
++        assertNotNull(bookOne.getId());
++        assertTrue(bookOne.getId() > 0);
++
++        assertEquals("Viktor Mayer-Schonberger e Kenneth Kukier", bookOne.getAuthor());
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
++        String formattedDate = sdf.format(bookOne.getLaunchDate());
++        assertEquals("07/11/2017", formattedDate);
++        assertEquals(54.0, bookOne.getPrice());
++        assertEquals("Big Data: como extrair volume, variedade," +
++                " velocidade e valor da avalanche de informação cotidiana", bookOne.getTitle());
++
++        BookDTO bookten = book.get(9);
++
++        assertNotNull(bookten.getId());
++        assertTrue(bookten.getId() > 0);
++
++        assertEquals("Crockford", bookten.getAuthor());
++        assertEquals("07/11/2017", formattedDate);
++        assertEquals(67.0, bookten.getPrice());
++        assertEquals("JavaScript", bookten.getTitle());
++    }
+ 
+-        BookDTO foundBookOne = content.get(0);
++    private void mockBook() throws ParseException {
++        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+ 
+-        assertNotNull(foundBookOne.getId());
+-        assertNotNull(foundBookOne.getTitle());
+-        assertNotNull(foundBookOne.getAuthor());
+-        assertNotNull(foundBookOne.getPrice());
+-        assertTrue(foundBookOne.getId() > 0);
+-        assertEquals("Big Data: como extrair volume, variedade, velocidade e valor da avalanche de informação cotidiana", foundBookOne.getTitle());
+-        assertEquals("Viktor Mayer-Schonberger e Kenneth Kukier", foundBookOne.getAuthor());
+-        assertEquals(54.00, foundBookOne.getPrice());
+-
+-        BookDTO foundBookFive = content.get(4);
+-
+-        assertNotNull(foundBookFive.getId());
+-        assertNotNull(foundBookFive.getTitle());
+-        assertNotNull(foundBookFive.getAuthor());
+-        assertNotNull(foundBookFive.getPrice());
+-        assertTrue(foundBookFive.getId() > 0);
+-        assertEquals("Domain Driven Design", foundBookFive.getTitle());
+-        assertEquals("Eric Evans", foundBookFive.getAuthor());
+-        assertEquals(92.00, foundBookFive.getPrice());
+-    }
+-
+-    private void mockBook() {
+-        book.setTitle("Docker Deep Dive");
+-        book.setAuthor("Nigel Poulton");
+-        book.setPrice(Double.valueOf(55.99));
+-        book.setLaunchDate(new Date());
++        bookDTO.setAuthor("Joshua Bloch");
++        Date date = sdf.parse("06/01/2018");
++        bookDTO.setLaunchDate(date);
++        bookDTO.setPrice(249.90);
++        bookDTO.setTitle("Effective Java");
+     }
+ }
+\ Nenhum caractere de nova linha no final do arquivo
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/PersonControllerYamlTest.java 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/PersonControllerYamlTest.java
+--- 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/PersonControllerYamlTest.java	2026-11-19 10:11:33.339628204 -0300
++++ 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/controllers/withyaml/PersonControllerYamlTest.java	2026-11-19 10:11:33.352201589 -0300
+@@ -227,58 +227,16 @@
+         assertEquals("Male", personOne.getGender());
+         assertFalse(personOne.getEnabled());
+ 
+-        PersonDTO personTen = people.get(9);
++        PersonDTO personten = people.get(9);
+ 
+-        assertNotNull(personTen.getId());
+-        assertTrue(personTen.getId() > 0);
++        assertNotNull(personten.getId());
++        assertTrue(personten.getId() > 0);
+ 
+-        assertEquals("Arlena", personTen.getFirstName());
+-        assertEquals("Servante", personTen.getLastName());
+-        assertEquals("35162 Mayer Pass", personTen.getAddress());
+-        assertEquals("Female", personTen.getGender());
+-        assertFalse(personTen.getEnabled());
+-    }
+-
+-    @Test
+-    @Order(7)
+-    void findByNameTestTest() {
+-
+-        var response = given(specification)
+-                .accept(MediaType.APPLICATION_YAML_VALUE)
+-                .pathParam("firstName", "and")
+-                .queryParams("page", 0, "size", 12, "direction", "asc")
+-                .when()
+-                .get("findPeopleByName/{firstName}")
+-                .then()
+-                .statusCode(200)
+-                .contentType(MediaType.APPLICATION_YAML_VALUE)
+-                .extract()
+-                .body()
+-                .as(PersonPagedModel.class, objectMapper);
+-
+-        List<PersonDTO> people = response.getContent();
+-
+-        PersonDTO personOne = people.get(0);
+-
+-        assertNotNull(personOne.getId());
+-        assertTrue(personOne.getId() > 0);
+-
+-        assertEquals("Alessandro", personOne.getFirstName());
+-        assertEquals("McFaul", personOne.getLastName());
+-        assertEquals("5 Lukken Plaza", personOne.getAddress());
+-        assertEquals("Male", personOne.getGender());
+-        assertTrue(personOne.getEnabled());
+-
+-        PersonDTO personFive = people.get(4);
+-
+-        assertNotNull(personFive.getId());
+-        assertTrue(personFive.getId() > 0);
+-
+-        assertEquals("Brandyn", personFive.getFirstName());
+-        assertEquals("Grasha", personFive.getLastName());
+-        assertEquals("96 Mosinee Parkway", personFive.getAddress());
+-        assertEquals("Male", personFive.getGender());
+-        assertTrue(personFive.getEnabled());
++        assertEquals("Arlena", personten.getFirstName());
++        assertEquals("Servante", personten.getLastName());
++        assertEquals("35162 Mayer Pass", personten.getAddress());
++        assertEquals("Female", personten.getGender());
++        assertFalse(personten.getEnabled());
+     }
+ 
+     private void mockPerson() {
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/dto/BookDTO.java 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/dto/BookDTO.java
+--- 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/dto/BookDTO.java	2026-11-19 10:11:33.339628204 -0300
++++ 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/dto/BookDTO.java	2026-11-19 10:11:33.352201589 -0300
+@@ -1,13 +1,11 @@
+ package com.udemy.spring_boot.integrationtests.dto;
+ 
+ import jakarta.xml.bind.annotation.XmlRootElement;
+-import org.springframework.hateoas.server.core.Relation;
+ 
+ import java.io.Serializable;
+ import java.util.Date;
+ import java.util.Objects;
+ 
+-@Relation(collectionRelation = "books")
+ @XmlRootElement
+ public class BookDTO implements Serializable {
+ 
+@@ -19,7 +17,8 @@
+     private Double price;
+     private String title;
+ 
+-    public BookDTO() {}
++    public BookDTO() {
++    }
+ 
+     public Long getId() {
+         return id;
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/dto/Wrapper/BookPagedModel.java 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/dto/Wrapper/BookPagedModel.java
+--- 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/dto/Wrapper/BookPagedModel.java	2026-11-19 10:11:33.339965823 -0300
++++ 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/dto/Wrapper/BookPagedModel.java	2026-11-19 10:11:33.352559460 -0300
+@@ -4,21 +4,24 @@
+ import jakarta.xml.bind.annotation.XmlElement;
+ import jakarta.xml.bind.annotation.XmlRootElement;
+ 
++import java.io.Serializable;
+ import java.util.List;
+ 
+ @XmlRootElement
+-public class BookPagedModel {
+-	
+-	@XmlElement(name = "content") 
+-	private List<BookDTO> content;
+-
+-	public BookPagedModel() {}
+-
+-	public List<BookDTO> getContent() {
+-		return content;
+-	}
+-
+-	public void setContent(List<BookDTO> content) {
+-		this.content = content;
+-	}
++public class BookPagedModel implements Serializable {
++
++    private static final long serialVersionUID = 1L;
++
++    @XmlElement(name = "content") // dispensável, já que a variável tem o mesmo nome
++    private List<BookDTO> content;
++
++    public BookPagedModel() {}
++
++    public List<BookDTO> getContent() {
++        return content;
++    }
++
++    public void setContent(List<BookDTO> content) {
++        this.content = content;
++    }
+ }
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/dto/Wrapper/json/BookHalEmbedded.java 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/dto/Wrapper/json/BookHalEmbedded.java
+--- 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/dto/Wrapper/json/BookHalEmbedded.java	2026-11-19 10:11:33.340165290 -0300
++++ 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/dto/Wrapper/json/BookHalEmbedded.java	2026-11-19 10:11:33.352809223 -0300
+@@ -10,16 +10,16 @@
+ 
+     private static final long serialVersionUID = 1L;
+ 
+-    @JsonProperty("books")
+-    private List<BookDTO> books;
++    @JsonProperty("books") // dispensável, já que a variável tem o mesmo nome
++    private List<BookDTO> book;
+ 
+     public BookHalEmbedded() {}
+ 
+-    public List<BookDTO> getBooks() {
+-        return books;
++    public List<BookDTO> getBook() {
++        return book;
+     }
+ 
+-    public void setBooks(List<BookDTO> books) {
+-        this.books = books;
++    public void setBook(List<BookDTO> book) {
++        this.book = book;
+     }
+ }
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/dto/Wrapper/json/BookHalPagedModel.java 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/dto/Wrapper/json/BookHalPagedModel.java
+--- 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/integrationtests/dto/Wrapper/json/BookHalPagedModel.java	2026-11-19 10:11:33.340341822 -0300
++++ 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/integrationtests/dto/Wrapper/json/BookHalPagedModel.java	2026-11-19 10:11:33.353025393 -0300
+@@ -7,17 +7,17 @@
+ public class BookHalPagedModel implements Serializable {
+ 
+     private static final long serialVersionUID = 1L;
+-    
++
+     @JsonProperty("_embedded")
+-    private BookHalEmbedded embedded;
++    private BookHalEmbedded embeddedDTO;
+ 
+     public BookHalPagedModel() {}
+ 
+-    public BookHalEmbedded getEmbedded() {
+-        return embedded;
++    public BookHalEmbedded getEmbeddedDTO() {
++        return embeddedDTO;
+     }
+ 
+-    public void setEmbedded(BookHalEmbedded embedded) {
+-        this.embedded = embedded;
++    public void setEmbeddedDTO(BookHalEmbedded embeddedDTO) {
++        this.embeddedDTO = embeddedDTO;
+     }
+ }
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/repository/PersonRepositoryTest.java 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/repository/PersonRepositoryTest.java
+--- 17-query-params-pagination-hal/base/src/test/java/com/udemy/spring_boot/repository/PersonRepositoryTest.java	2026-11-19 10:11:33.340341822 -0300
++++ 17-query-params-pagination-hal/challenge-2-books-integration-tests/src/test/java/com/udemy/spring_boot/repository/PersonRepositoryTest.java	1969-12-31 21:00:00.000000000 -0300
+@@ -1,63 +0,0 @@
+-package com.udemy.spring_boot.repository;
+-
+-import com.udemy.spring_boot.integrationtests.testcontainer.AbstractIntegrationTest;
+-import com.udemy.spring_boot.model.Person;
+-import org.junit.jupiter.api.*;
+-import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+-import org.springframework.data.domain.PageRequest;
+-import org.springframework.data.domain.Pageable;
+-import org.springframework.data.domain.Sort;
+-
+-import static org.junit.jupiter.api.Assertions.*;
+-
+-@DataJpaTest
+-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+-class PersonRepositoryTest extends AbstractIntegrationTest {
+-
+-    @Autowired
+-    PersonRepository personRepository;
+-    private static Person person;
+-
+-    @Test
+-    @Order(1)
+-    void findPeopleByName() {
+-        Pageable pageable = PageRequest.of(
+-                0, 12, Sort.by(Sort.Direction.ASC, "firstName"));
+-
+-        person = personRepository
+-                .findPeopleByName("Leandro", pageable)
+-                .getContent()
+-                .get(0);
+-
+-        assertNotNull(person);
+-        assertNotNull(person.getId());
+-        assertEquals("Leandro", person.getFirstName());
+-        assertEquals("Pereira", person.getLastName());
+-        assertEquals("Moradas do Bosque", person.getAddress());
+-        assertEquals("Male", person.getGender());
+-        assertTrue(person.getEnabled());
+-    }
+-
+-    @Test
+-    @Order(2)
+-    void disablePerson() {
+-
+-        Pageable pageable = PageRequest.of(
+-                0, 12, Sort.by(Sort.Direction.ASC, "firstName"));
+-
+-        Person person = personRepository
+-                .findPeopleByName("Leandro", pageable)
+-                .getContent()
+-                .get(0);
+-
+-        Long id = person.getId();
+-        personRepository.disablePerson(id);
+-
+-        person = personRepository.findById(id).get();
+-
+-        assertFalse(person.getEnabled());
+-    }
+-}
+\ Nenhum caractere de nova linha no final do arquivo

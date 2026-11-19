@@ -1,0 +1,1935 @@
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/pom.xml 12-swagger-openapi/challenge-2-unit-tests-books/pom.xml
+--- 12-swagger-openapi/base/pom.xml	2026-11-19 10:11:33.274653697 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/pom.xml	2026-11-19 10:11:33.282022958 -0300
+@@ -92,7 +92,7 @@
+                 <groupId>org.flywaydb</groupId>
+                 <artifactId>flyway-maven-plugin</artifactId>
+                 <configuration>
+-                    <url>jdbc:mysql://localhost:3308/spring_boot?useTimezone=trueserver&amp;Timezone=UTC</url>
++                    <url>jdbc:mysql://localhost:3308/spring_boot_challenge_2?useTimezone=trueserver&amp;Timezone=UTC</url>
+                     <user>root</user>
+                     <!--sei que é má prática deixar senha exposta-->
+                     <password>root</password>
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/controllers/BookController.java 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/controllers/BookController.java
+--- 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/controllers/BookController.java	1969-12-31 21:00:00.000000000 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/controllers/BookController.java	2026-11-19 10:11:33.282693565 -0300
+@@ -0,0 +1,69 @@
++package com.udemy.spring_boot.controllers;
++
++import com.udemy.spring_boot.controllers.docs.BookControllerDocs;
++import com.udemy.spring_boot.data.dto.BookDTO;
++import com.udemy.spring_boot.services.BookServices;
++import io.swagger.v3.oas.annotations.tags.Tag;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.http.MediaType;
++import org.springframework.http.ResponseEntity;
++import org.springframework.web.bind.annotation.*;
++
++import java.util.List;
++
++@RestController
++@RequestMapping("/api/books/v1")
++@Tag(name = "Book", description = "Endpoints for Managing Books")
++public class BookController implements BookControllerDocs { // A documentação do Swaager fica na interface PersonControllerDocs
++
++    @Autowired
++    private BookServices bookServices;
++
++    @GetMapping(
++            produces = {MediaType.APPLICATION_JSON_VALUE,
++                    MediaType.APPLICATION_XML_VALUE,
++                    MediaType.APPLICATION_YAML_VALUE}
++    )
++    @Override
++    public List<BookDTO> findAll() {
++        return bookServices.findAll();
++    }
++
++    @GetMapping(value = "/{id}",
++            produces = {MediaType.APPLICATION_JSON_VALUE,
++                    MediaType.APPLICATION_XML_VALUE,
++                    MediaType.APPLICATION_YAML_VALUE}
++    )
++    @Override
++    public BookDTO findById(@PathVariable("id") Long id) {
++        return bookServices.findById(id);
++    }
++
++    @PostMapping(
++            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
++            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
++    )
++    @Override
++    public BookDTO create(@RequestBody BookDTO book) { // sem o RequestBody, não conseguimos pegar os valores do body
++        return bookServices.create(book);
++    }
++
++    @PutMapping(value = "/{id}",
++            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
++            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
++    )
++    @Override
++    public BookDTO update(@PathVariable(value = "id") Long id, @RequestBody BookDTO book) {
++        book.setId(id);
++        return bookServices.update(book);
++    }
++
++
++    @DeleteMapping(value = "/{id}")
++    @Override
++    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
++        bookServices.delete(id);
++
++        return ResponseEntity.noContent().build();
++    }
++}
+\ Nenhum caractere de nova linha no final do arquivo
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/controllers/docs/BookControllerDocs.java 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/controllers/docs/BookControllerDocs.java
+--- 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/controllers/docs/BookControllerDocs.java	1969-12-31 21:00:00.000000000 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/controllers/docs/BookControllerDocs.java	2026-11-19 10:11:33.282890912 -0300
+@@ -0,0 +1,99 @@
++package com.udemy.spring_boot.controllers.docs;
++
++import com.udemy.spring_boot.data.dto.BookDTO;
++import io.swagger.v3.oas.annotations.Operation;
++import io.swagger.v3.oas.annotations.media.ArraySchema;
++import io.swagger.v3.oas.annotations.media.Content;
++import io.swagger.v3.oas.annotations.media.Schema;
++import io.swagger.v3.oas.annotations.responses.ApiResponse;
++import org.springframework.http.MediaType;
++import org.springframework.http.ResponseEntity;
++import org.springframework.web.bind.annotation.*;
++
++import java.util.List;
++
++public interface BookControllerDocs {
++    @Operation(summary = "Find All Books", description = "Finds ALL Books",
++            tags = {"Books"},
++            responses = {
++                    @ApiResponse(description = "Success",
++                            responseCode = "200",
++                            content = {
++                                    @Content(
++                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
++                                            array = @ArraySchema(schema = @Schema(implementation = BookDTO.class))
++                                    )
++                            }),
++                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
++                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
++                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
++                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
++                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
++
++            }
++    )
++    List<BookDTO> findAll();
++
++    @Operation(summary = "Finds a Book", description = "Find a specific book by your id",
++            tags = {"Books"},
++            responses = {
++                    @ApiResponse(description = "Success",
++                            responseCode = "200",
++                            content = {
++                                    @Content(schema = @Schema(implementation = BookDTO.class))
++                            }),
++                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
++                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
++                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
++                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
++                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
++            }
++    )
++    BookDTO findById(@PathVariable("id") Long id);
++
++    @Operation(summary = "Adds a New Book", description = "Adds a new Book with JSON, XML or YML Body",
++            tags = {"Books"},
++            responses = {
++                    @ApiResponse(description = "Success",
++                            responseCode = "200",
++                            content = {
++                                    @Content(schema = @Schema(implementation = BookDTO.class))
++                            }),
++                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
++                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
++                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
++                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
++                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
++            }
++    )
++    BookDTO create(@RequestBody BookDTO book);
++
++    @Operation(summary = "Updates a Book's Information", description = "Updates a Book's information with JSON, XML ou YML Body",
++            tags = {"Books"},
++            responses = {
++                    @ApiResponse(description = "Success",
++                            responseCode = "200",
++                            content = {
++                                    @Content(schema = @Schema(implementation = BookDTO.class))
++                            }),
++                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
++                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
++                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
++                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
++                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
++            }
++    )
++    BookDTO update(@PathVariable("id") Long id, @RequestBody BookDTO book);
++
++    @Operation(summary = "Deletes a Book", description = "Delete a specific Book by your id",
++            tags = {"Books"},
++            responses = {
++                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
++                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
++                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
++                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
++                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
++            }
++    )
++    ResponseEntity<?> delete(@PathVariable("id") Long id);
++}
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/controllers/docs/PersonControllerDocs.java 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/controllers/docs/PersonControllerDocs.java
+--- 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/controllers/docs/PersonControllerDocs.java	2026-11-19 10:11:33.276082866 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/controllers/docs/PersonControllerDocs.java	1969-12-31 21:00:00.000000000 -0300
+@@ -1,99 +0,0 @@
+-package com.udemy.spring_boot.controllers.docs;
+-
+-import com.udemy.spring_boot.data.dto.PersonDTO;
+-import io.swagger.v3.oas.annotations.Operation;
+-import io.swagger.v3.oas.annotations.media.ArraySchema;
+-import io.swagger.v3.oas.annotations.media.Content;
+-import io.swagger.v3.oas.annotations.media.Schema;
+-import io.swagger.v3.oas.annotations.responses.ApiResponse;
+-import org.springframework.http.MediaType;
+-import org.springframework.http.ResponseEntity;
+-import org.springframework.web.bind.annotation.*;
+-
+-import java.util.List;
+-
+-public interface PersonControllerDocs {
+-    @Operation(summary = "Find All People", description = "Finds ALL People",
+-            tags = {"People"},
+-            responses = {
+-                    @ApiResponse(description = "Sucess",
+-                            responseCode = "200",
+-                            content = {
+-                                    @Content(
+-                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+-                                            array = @ArraySchema(schema = @Schema(implementation = PersonDTO.class))
+-                                    )
+-                            }),
+-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+-                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+-                    @ApiResponse(description = "Internal Server Eror", responseCode = "500", content = @Content)
+-
+-            }
+-    )
+-    List<PersonDTO> findAll();
+-
+-    @Operation(summary = "Finds a Person", description = "Find a specific person by your id",
+-            tags = {"People"},
+-            responses = {
+-                    @ApiResponse(description = "Sucess",
+-                            responseCode = "200",
+-                            content = {
+-                                    @Content(schema = @Schema(implementation = PersonDTO.class))
+-                            }),
+-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+-                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+-                    @ApiResponse(description = "Internal Server Eror", responseCode = "500", content = @Content)
+-            }
+-    )
+-    PersonDTO findById(@PathVariable("id") Long id);
+-
+-    @Operation(summary = "Adds a new Person", description = "Adds a new Person with JSON, XML or YML Body",
+-            tags = {"People"},
+-            responses = {
+-                    @ApiResponse(description = "Sucess",
+-                            responseCode = "200",
+-                            content = {
+-                                    @Content(schema = @Schema(implementation = PersonDTO.class))
+-                            }),
+-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+-                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+-                    @ApiResponse(description = "Internal Server Eror", responseCode = "500", content = @Content)
+-            }
+-    )
+-    PersonDTO create(@RequestBody PersonDTO person);
+-
+-    @Operation(summary = "Updates a person's information", description = "Updates a person's information with JSON, XML ou YML Body",
+-            tags = {"People"},
+-            responses = {
+-                    @ApiResponse(description = "Sucess",
+-                            responseCode = "200",
+-                            content = {
+-                                    @Content(schema = @Schema(implementation = PersonDTO.class))
+-                            }),
+-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+-                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+-                    @ApiResponse(description = "Internal Server Eror", responseCode = "500", content = @Content)
+-            }
+-    )
+-    PersonDTO update(@PathVariable("id") Long id, @RequestBody PersonDTO person);
+-
+-    @Operation(summary = "Deletes a Person", description = "Delete a specific person by your id",
+-            tags = {"People"},
+-            responses = {
+-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+-                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+-                    @ApiResponse(description = "Internal Server Eror", responseCode = "500", content = @Content)
+-            }
+-    )
+-    ResponseEntity<?> delete(@PathVariable("id") Long id);
+-}
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/controllers/PersonController.java 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/controllers/PersonController.java
+--- 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/controllers/PersonController.java	2026-11-19 10:11:33.275873134 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/controllers/PersonController.java	1969-12-31 21:00:00.000000000 -0300
+@@ -1,74 +0,0 @@
+-package com.udemy.spring_boot.controllers;
+-
+-import com.udemy.spring_boot.controllers.docs.PersonControllerDocs;
+-import com.udemy.spring_boot.data.dto.PersonDTO;
+-import com.udemy.spring_boot.services.PersonServices;
+-import io.swagger.v3.oas.annotations.tags.Tag;
+-import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.http.MediaType;
+-import org.springframework.http.ResponseEntity;
+-import org.springframework.web.bind.annotation.*;
+-
+-import java.util.List;
+-
+-@RestController
+-@RequestMapping("/api/person/v1")
+-@Tag(name = "People", description = "Endpoints for Managing People")
+-public class PersonController implements PersonControllerDocs { // A documentação do Swaager fica na interface PersonControllerDocs
+-
+-    @Autowired // para não precisa do "= new PersonServices();"
+-    private PersonServices personServices;
+-
+-    @GetMapping(
+-            produces = {MediaType.APPLICATION_JSON_VALUE,
+-                    MediaType.APPLICATION_XML_VALUE,
+-                    MediaType.APPLICATION_YAML_VALUE}
+-    )
+-
+-    @Override
+-    public List<PersonDTO> findAll() {
+-        return personServices.findAll();
+-    }
+-
+-    @GetMapping(value = "/{id}",
+-            produces = {MediaType.APPLICATION_JSON_VALUE,
+-                    MediaType.APPLICATION_XML_VALUE,
+-                    MediaType.APPLICATION_YAML_VALUE}
+-    )
+-
+-    @Override
+-    public PersonDTO findById(@PathVariable("id") Long id) {
+-        return personServices.findById(id);
+-    }
+-
+-    @PostMapping(
+-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
+-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
+-    )
+-
+-    @Override
+-    public PersonDTO create(@RequestBody PersonDTO person) { // sem o RequestBody, não conseguimos pegar os valores do body
+-        return personServices.create(person);
+-    }
+-
+-    @PutMapping(
+-            value = "/{id}",
+-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
+-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
+-    )
+-
+-    @Override
+-    public PersonDTO update(@PathVariable(value = "id") Long id, @RequestBody PersonDTO person) {
+-        person.setId(id);
+-        return personServices.update(person);
+-    }
+-
+-    @DeleteMapping(value = "/{id}")
+-
+-    @Override
+-    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+-        personServices.delete(id);
+-
+-        return ResponseEntity.noContent().build();
+-    }
+-}
+\ Nenhum caractere de nova linha no final do arquivo
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/controllers/TestLogController.java 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/controllers/TestLogController.java
+--- 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/controllers/TestLogController.java	2026-11-19 10:11:33.276082866 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/controllers/TestLogController.java	1969-12-31 21:00:00.000000000 -0300
+@@ -1,23 +0,0 @@
+-package com.udemy.spring_boot.controllers;
+-
+-import org.slf4j.Logger;
+-import org.slf4j.LoggerFactory;
+-import org.springframework.web.bind.annotation.GetMapping;
+-import org.springframework.web.bind.annotation.RequestMapping;
+-import org.springframework.web.bind.annotation.RestController;
+-
+-@RestController
+-@RequestMapping("/api/test/v1")
+-public class TestLogController {
+-    private Logger logger = LoggerFactory.getLogger(TestLogController.class.getName());
+-
+-    @GetMapping
+-    public String testLog(){
+-        logger.debug("This is a DEBUG log");
+-        logger.info("This is an INFO log");
+-        logger.warn("This is a WARN log");
+-        logger.error("This is an ERROR log");
+-
+-        return "Logs sucessfully";
+-    }
+-}
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/data/dto/BookDTO.java 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/data/dto/BookDTO.java
+--- 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/data/dto/BookDTO.java	1969-12-31 21:00:00.000000000 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/data/dto/BookDTO.java	2026-11-19 10:11:33.283053268 -0300
+@@ -0,0 +1,92 @@
++package com.udemy.spring_boot.data.dto;
++
++import io.swagger.v3.oas.annotations.media.Schema;
++import org.springframework.hateoas.Links;
++import org.springframework.hateoas.RepresentationModel;
++
++import java.io.Serializable;
++import java.util.Date;
++import java.util.Objects;
++
++public class BookDTO extends RepresentationModel<BookDTO> implements Serializable {
++
++    private static final long serialVersionUID = 1L;
++
++    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
++    private Long id;
++    private String author;
++    private Date launchDate;
++    private Double price;
++    private String title;
++
++    public BookDTO() {
++
++    }
++
++    public BookDTO(Long id, String author, Date launchDate, Double price, String title) {
++        this.id = id;
++        this.author = author;
++        this.launchDate = launchDate;
++        this.price = price;
++        this.title = title;
++    }
++
++    @Override
++    public boolean equals(Object o) {
++        if (o == null || getClass() != o.getClass()) return false;
++        if (!super.equals(o)) return false;
++        BookDTO bookDTO = (BookDTO) o;
++        return Objects.equals(getId(), bookDTO.getId()) && Objects.equals(getAuthor(), bookDTO.getAuthor()) && Objects.equals(getLaunchDate(), bookDTO.getLaunchDate()) && Objects.equals(getPrice(), bookDTO.getPrice()) && Objects.equals(getTitle(), bookDTO.getTitle());
++    }
++
++    @Override
++    public int hashCode() {
++        return Objects.hash(super.hashCode(), getId(), getAuthor(), getLaunchDate(), getPrice(), getTitle());
++    }
++
++    public Long getId() {
++        return id;
++    }
++
++    public void setId(Long id) {
++        this.id = id;
++    }
++
++    public String getAuthor() {
++        return author;
++    }
++
++    public void setAuthor(String author) {
++        this.author = author;
++    }
++
++    public Date getLaunchDate() {
++        return launchDate;
++    }
++
++    public void setLaunchDate(Date launchDate) {
++        this.launchDate = launchDate;
++    }
++
++    public Double getPrice() {
++        return price;
++    }
++
++    public void setPrice(Double price) {
++        this.price = price;
++    }
++
++    public String getTitle() {
++        return title;
++    }
++
++    public void setTitle(String title) {
++        this.title = title;
++    }
++
++    @Override
++    @Schema(hidden = true)
++    public Links getLinks() {
++        return super.getLinks();
++    }
++}
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/data/dto/PersonDTO.java 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/data/dto/PersonDTO.java
+--- 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/data/dto/PersonDTO.java	2026-11-19 10:11:33.276294631 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/data/dto/PersonDTO.java	1969-12-31 21:00:00.000000000 -0300
+@@ -1,82 +0,0 @@
+-package com.udemy.spring_boot.data.dto;
+-
+-import io.swagger.v3.oas.annotations.media.Schema;
+-import jakarta.persistence.*;
+-import org.springframework.hateoas.Links;
+-import org.springframework.hateoas.RepresentationModel;
+-
+-import java.io.Serializable;
+-import java.util.Objects;
+-
+-public class PersonDTO extends RepresentationModel<PersonDTO> implements Serializable {
+-
+-    private static final long serialVersionUID = 1L;
+-
+-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+-    private Long id;
+-    private String firstName;
+-    private String lastName;
+-    private String address;
+-    private String gender;
+-
+-    public PersonDTO(){
+-
+-    }
+-
+-    @Override
+-    public boolean equals(Object o) {
+-        if (!(o instanceof PersonDTO person)) return false;
+-        return Objects.equals(id, person.id) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Objects.equals(gender, person.gender);
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        return Objects.hash(id, firstName, lastName, address, gender);
+-    }
+-
+-    public Long getId() {
+-        return id;
+-    }
+-
+-    public void setId(Long id) {
+-        this.id = id;
+-    }
+-
+-    public String getFirstName() {
+-        return firstName;
+-    }
+-
+-    public void setFirstName(String firstName) {
+-        this.firstName = firstName;
+-    }
+-
+-    public String getLastName() {
+-        return lastName;
+-    }
+-
+-    public void setLastName(String lastName) {
+-        this.lastName = lastName;
+-    }
+-
+-    public String getAddress() {
+-        return address;
+-    }
+-
+-    public void setAddress(String address) {
+-        this.address = address;
+-    }
+-
+-    public String getGender() {
+-        return gender;
+-    }
+-
+-    public void setGender(String gender) {
+-        this.gender = gender;
+-    }
+-
+-    @Override
+-    @Schema(hidden = true)
+-    public Links getLinks() {
+-        return super.getLinks();
+-    }
+-}
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/model/Book.java 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/model/Book.java
+--- 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/model/Book.java	1969-12-31 21:00:00.000000000 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/model/Book.java	2026-11-19 10:11:33.283281021 -0300
+@@ -0,0 +1,92 @@
++package com.udemy.spring_boot.model;
++
++import jakarta.persistence.*;
++
++import java.io.Serializable;
++import java.util.Date;
++import java.util.Objects;
++
++@Entity
++@Table(name = "books")
++public class Book implements Serializable {
++
++    private static final long serialVersionUID = 1L;
++
++    @Id
++    @GeneratedValue(strategy = GenerationType.IDENTITY)
++    private Long id;
++
++    private String author;
++
++    @Column(name = "launch_date", nullable = false, length = 6)
++    private Date launchDate;
++
++    @Column(nullable = false, length = 65, precision = 2)
++    private Double price;
++
++    private String title;
++
++    public Book() {
++
++    }
++
++    public Book(Long id, String author, Date launchDate, Double price, String title) {
++        this.id = id;
++        this.author = author;
++        this.launchDate = launchDate;
++        this.price = price;
++        this.title = title;
++    }
++
++    @Override
++    public boolean equals(Object o) {
++        if (o == null || getClass() != o.getClass()) return false;
++        Book book = (Book) o;
++        return Objects.equals(getId(), book.getId()) && Objects.equals(getAuthor(), book.getAuthor()) && Objects.equals(getLaunchDate(), book.getLaunchDate()) && Objects.equals(getPrice(), book.getPrice()) && Objects.equals(getTitle(), book.getTitle());
++    }
++
++    @Override
++    public int hashCode() {
++        return Objects.hash(getId(), getAuthor(), getLaunchDate(), getPrice(), getTitle());
++    }
++
++    public Long getId() {
++        return id;
++    }
++
++    public void setId(Long id) {
++        this.id = id;
++    }
++
++    public String getAuthor() {
++        return author;
++    }
++
++    public void setAuthor(String author) {
++        this.author = author;
++    }
++
++    public Date getLaunchDate() {
++        return launchDate;
++    }
++
++    public void setLaunchDate(Date launchDate) {
++        this.launchDate = launchDate;
++    }
++
++    public Double getPrice() {
++        return price;
++    }
++
++    public void setPrice(Double price) {
++        this.price = price;
++    }
++
++    public String getTitle() {
++        return title;
++    }
++
++    public void setTitle(String title) {
++        this.title = title;
++    }
++}
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/model/Person.java 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/model/Person.java
+--- 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/model/Person.java	2026-11-19 10:11:33.276638136 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/model/Person.java	1969-12-31 21:00:00.000000000 -0300
+@@ -1,84 +0,0 @@
+-package com.udemy.spring_boot.model;
+-
+-import jakarta.persistence.*;
+-
+-import java.io.Serializable;
+-import java.util.Objects;
+-
+-@Entity
+-@Table(name = "person")
+-public class Person implements Serializable {
+-
+-    private static final long serialVersionUID = 1L;
+-
+-    @Id
+-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+-    private Long id;
+-
+-    @Column(name = "first_name", nullable = false, length = 80)
+-    private String firstName;
+-
+-    @Column(name = "last_name", nullable = false, length = 80)
+-    private String lastName;
+-
+-    @Column(nullable = false, length = 100)
+-    private String address;
+-
+-    @Column(nullable = false, length = 6)
+-    private String gender;
+-
+-    public Person(){
+-
+-    }
+-
+-    @Override
+-    public boolean equals(Object o) {
+-        if (!(o instanceof Person person)) return false;
+-        return Objects.equals(id, person.id) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Objects.equals(gender, person.gender);
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        return Objects.hash(id, firstName, lastName, address, gender);
+-    }
+-
+-    public Long getId() {
+-        return id;
+-    }
+-
+-    public void setId(Long id) {
+-        this.id = id;
+-    }
+-
+-    public String getFirstName() {
+-        return firstName;
+-    }
+-
+-    public void setFirstName(String firstName) {
+-        this.firstName = firstName;
+-    }
+-
+-    public String getLastName() {
+-        return lastName;
+-    }
+-
+-    public void setLastName(String lastName) {
+-        this.lastName = lastName;
+-    }
+-
+-    public String getAddress() {
+-        return address;
+-    }
+-
+-    public void setAddress(String address) {
+-        this.address = address;
+-    }
+-
+-    public String getGender() {
+-        return gender;
+-    }
+-
+-    public void setGender(String gender) {
+-        this.gender = gender;
+-    }
+-}
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/repository/BookRepository.java 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/repository/BookRepository.java
+--- 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/repository/BookRepository.java	1969-12-31 21:00:00.000000000 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/repository/BookRepository.java	2026-11-19 10:11:33.283487565 -0300
+@@ -0,0 +1,7 @@
++package com.udemy.spring_boot.repository;
++
++import com.udemy.spring_boot.model.Book;
++import org.springframework.data.jpa.repository.JpaRepository;
++
++public interface BookRepository extends JpaRepository<Book, Long> {
++}
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/repository/PersonRepository.java 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/repository/PersonRepository.java
+--- 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/repository/PersonRepository.java	2026-11-19 10:11:33.276638136 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/repository/PersonRepository.java	1969-12-31 21:00:00.000000000 -0300
+@@ -1,7 +0,0 @@
+-package com.udemy.spring_boot.repository;
+-
+-import com.udemy.spring_boot.model.Person;
+-import org.springframework.data.jpa.repository.JpaRepository;
+-
+-public interface PersonRepository extends JpaRepository<Person, Long> {
+-}
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/services/BookServices.java 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/services/BookServices.java
+--- 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/services/BookServices.java	1969-12-31 21:00:00.000000000 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/services/BookServices.java	2026-11-19 10:11:33.283990718 -0300
+@@ -0,0 +1,92 @@
++package com.udemy.spring_boot.services;
++
++import com.udemy.spring_boot.controllers.BookController;
++import com.udemy.spring_boot.data.dto.BookDTO;
++import com.udemy.spring_boot.exception.RequiredObjectIsNullException;
++import com.udemy.spring_boot.exception.ResourceNotFoundException;
++import com.udemy.spring_boot.model.Book;
++import com.udemy.spring_boot.repository.BookRepository;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Service;
++
++import java.util.List;
++
++import static com.udemy.spring_boot.mapper.ObjectMapper.parseListObjects;
++import static com.udemy.spring_boot.mapper.ObjectMapper.parseObject;
++import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
++import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
++
++
++@Service
++public class BookServices {
++
++    private Logger logger = LoggerFactory.getLogger(BookServices.class.getName());
++
++    @Autowired
++    BookRepository bookRepository;
++
++    public BookDTO create(BookDTO book) {
++
++        if (book == null) throw new RequiredObjectIsNullException();
++
++        logger.info("creating one book");
++
++        var entity = parseObject(book, Book.class);
++        var dto = parseObject(bookRepository.save(entity), BookDTO.class);
++        addHateoasLinks(dto);
++        return dto;
++    }
++
++    public List<BookDTO> findAll() {
++        logger.info("finding all books");
++        var books = parseListObjects(bookRepository.findAll(), BookDTO.class);
++        books.forEach(this::addHateoasLinks);
++        return books;
++    }
++
++    public BookDTO findById(Long id) {
++        logger.info("finding one book");
++
++        var entity = bookRepository.findById(id)
++                .orElseThrow(() -> new ResourceNotFoundException("No records found for this id"));
++        var dto = parseObject(entity, BookDTO.class);
++        addHateoasLinks(dto);
++        return dto;
++    }
++
++    public BookDTO update(BookDTO book) {
++
++        if (book == null) throw new RequiredObjectIsNullException();
++
++        logger.info("updating one book");
++        Book entity = bookRepository.findById(book.getId())
++                .orElseThrow(() -> new ResourceNotFoundException("No records found for this id"));
++
++        entity.setAuthor(book.getAuthor());
++        entity.setLaunchDate(book.getLaunchDate());
++        entity.setPrice(book.getPrice());
++        entity.setTitle(book.getTitle());
++        var dto = parseObject(bookRepository.save(entity), BookDTO.class);
++        addHateoasLinks(dto);
++        return dto;
++    }
++
++    public void delete(Long id) {
++        logger.info("deleting one book");
++
++        Book entity = bookRepository.findById(id)
++                .orElseThrow(() -> new ResourceNotFoundException("No records found for this id"));
++
++        bookRepository.delete(entity);
++    }
++
++    private void addHateoasLinks(BookDTO dto) {
++        dto.add(linkTo(methodOn(BookController.class).findById(dto.getId())).withSelfRel().withType("GET"));
++        dto.add(linkTo(methodOn(BookController.class).findAll()).withRel("findAll").withType("GET"));
++        dto.add(linkTo(methodOn(BookController.class).create(dto)).withRel("create").withType("POST"));
++        dto.add(linkTo(methodOn(BookController.class).update(dto.getId(), dto)).withRel("update").withType("PUT"));
++        dto.add(linkTo(methodOn(BookController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
++    }
++}
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/services/PersonServices.java 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/services/PersonServices.java
+--- 12-swagger-openapi/base/src/main/java/com/udemy/spring_boot/services/PersonServices.java	2026-11-19 10:11:33.277213400 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/java/com/udemy/spring_boot/services/PersonServices.java	1969-12-31 21:00:00.000000000 -0300
+@@ -1,94 +0,0 @@
+-package com.udemy.spring_boot.services;
+-
+-import com.udemy.spring_boot.controllers.PersonController;
+-import com.udemy.spring_boot.data.dto.PersonDTO;
+-import com.udemy.spring_boot.exception.RequiredObjectIsNullException;
+-import com.udemy.spring_boot.exception.ResourceNotFoundException;
+-import static com.udemy.spring_boot.mapper.ObjectMapper.parseObject;
+-import static com.udemy.spring_boot.mapper.ObjectMapper.parseListObjects;
+-import com.udemy.spring_boot.model.Person;
+-import com.udemy.spring_boot.repository.PersonRepository;
+-import org.slf4j.Logger;
+-import org.slf4j.LoggerFactory;
+-import org.springframework.beans.factory.annotation.Autowired;
+-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+-
+-import org.springframework.stereotype.Service;
+-
+-import java.util.List;
+-import java.util.concurrent.atomic.AtomicLong;
+-
+-
+-@Service
+-public class PersonServices {
+-
+-    private final AtomicLong counter = new AtomicLong();
+-    private Logger logger = LoggerFactory.getLogger(PersonServices.class.getName());
+-
+-    @Autowired
+-    PersonRepository personRepository;
+-
+-    public PersonDTO create(PersonDTO person) {
+-
+-        if (person == null) throw new RequiredObjectIsNullException();
+-
+-        logger.info("creating one person");
+-
+-        var entity = parseObject(person, Person.class);
+-        var dto = parseObject(personRepository.save(entity), PersonDTO.class);
+-        addHateoasLinks(dto);
+-        return dto;
+-    }
+-
+-    public List<PersonDTO> findAll() {
+-        logger.info("finding all persons");
+-        var people = parseListObjects(personRepository.findAll(), PersonDTO.class);
+-        people.forEach(this::addHateoasLinks);
+-        return people;
+-    }
+-
+-    public PersonDTO findById(Long id) {
+-        logger.info("finding one person");
+-
+-        var entity = personRepository.findById(id)
+-                .orElseThrow(() -> new ResourceNotFoundException("No records found for this id"));
+-        var dto = parseObject(entity, PersonDTO.class);
+-        addHateoasLinks(dto);
+-        return dto;
+-    }
+-
+-    public PersonDTO update(PersonDTO person) {
+-
+-        if (person == null) throw new RequiredObjectIsNullException();
+-
+-        logger.info("updating one person");
+-        Person entity = personRepository.findById(person.getId())
+-                .orElseThrow(() -> new ResourceNotFoundException("No records found for this id"));
+-
+-        entity.setFirstName(person.getFirstName());
+-        entity.setLastName(person.getLastName());
+-        entity.setAddress(person.getAddress());
+-        entity.setGender(person.getGender());
+-        var dto = parseObject(personRepository.save(entity), PersonDTO.class);
+-        addHateoasLinks(dto);
+-        return dto;
+-    }
+-
+-    public void delete(Long id) {
+-        logger.info("deleting one person");
+-
+-        Person entity = personRepository.findById(id)
+-                .orElseThrow(() -> new ResourceNotFoundException("No records found for this id"));
+-
+-        personRepository.delete(entity);
+-    }
+-
+-    private void addHateoasLinks(PersonDTO dto) {
+-        dto.add(linkTo(methodOn(PersonController.class).findById(dto.getId())).withSelfRel().withType("GET"));
+-        dto.add(linkTo(methodOn(PersonController.class).findAll()).withRel("findAll").withType("GET"));
+-        dto.add(linkTo(methodOn(PersonController.class).create(dto)).withRel("create").withType("POST"));
+-        dto.add(linkTo(methodOn(PersonController.class).update(dto.getId(), dto)).withRel("update").withType("PUT"));
+-        dto.add(linkTo(methodOn(PersonController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
+-    }
+-}
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/resources/application.yml 12-swagger-openapi/challenge-2-unit-tests-books/src/main/resources/application.yml
+--- 12-swagger-openapi/base/src/main/resources/application.yml	2026-11-19 10:11:33.277213400 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/resources/application.yml	2026-11-19 10:11:33.283990718 -0300
+@@ -3,7 +3,7 @@
+     name: spring-boot
+   datasource:
+     driver-class-name: com.mysql.cj.jdbc.Driver
+-    url: jdbc:mysql://localhost:3308/spring_boot?useTimezone=true&serverTimezone=UTC
++    url: jdbc:mysql://localhost:3308/spring_boot_challenge_2?useTimezone=true&serverTimezone=UTC
+     username: root
+     #     Sei que é uma má prática deixar senha exposta
+     password: root
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/resources/db/migration/V1__Create_Table_Books.sql 12-swagger-openapi/challenge-2-unit-tests-books/src/main/resources/db/migration/V1__Create_Table_Books.sql
+--- 12-swagger-openapi/base/src/main/resources/db/migration/V1__Create_Table_Books.sql	1969-12-31 21:00:00.000000000 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/resources/db/migration/V1__Create_Table_Books.sql	2026-11-19 10:11:33.284341654 -0300
+@@ -0,0 +1,7 @@
++﻿CREATE TABLE `books` (
++  `id` INT(10) AUTO_INCREMENT PRIMARY KEY,
++  `author` longtext,
++  `launch_date` datetime(6) NOT NULL,
++  `price` decimal(65,2) NOT NULL,
++  `title` longtext
++) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/resources/db/migration/V1__Create_Table_Person.sql 12-swagger-openapi/challenge-2-unit-tests-books/src/main/resources/db/migration/V1__Create_Table_Person.sql
+--- 12-swagger-openapi/base/src/main/resources/db/migration/V1__Create_Table_Person.sql	2026-11-19 10:11:33.277573303 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/resources/db/migration/V1__Create_Table_Person.sql	1969-12-31 21:00:00.000000000 -0300
+@@ -1,9 +0,0 @@
+-CREATE TABLE `person` (
+-  `id` bigint NOT NULL AUTO_INCREMENT,
+-  `first_name` varchar(80) NOT NULL,
+-  `last_name` varchar(80) NOT NULL,
+-  `address` varchar(100) NOT NULL,
+-  `gender` varchar(6) NOT NULL,
+-  PRIMARY KEY (`id`)
+-);
+-
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/resources/db/migration/V2__Insert_Data_In_Books.sql 12-swagger-openapi/challenge-2-unit-tests-books/src/main/resources/db/migration/V2__Insert_Data_In_Books.sql
+--- 12-swagger-openapi/base/src/main/resources/db/migration/V2__Insert_Data_In_Books.sql	1969-12-31 21:00:00.000000000 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/resources/db/migration/V2__Insert_Data_In_Books.sql	2026-11-19 10:11:33.284484299 -0300
+@@ -0,0 +1,16 @@
++﻿INSERT INTO `books` (`author`, `launch_date`, `price`, `title`) VALUES
++	('Michael C. Feathers', '2017-11-29 13:50:05.878000', 49.00, 'Working effectively with legacy code'),
++	('Ralph Johnson, Erich Gamma, John Vlissides e Richard Helm', '2017-11-29 15:15:13.636000', 45.00, 'Design Patterns'),
++	('Robert C. Martin', '2009-01-10 00:00:00.000000', 77.00, 'Clean Code'),
++	('Crockford', '2017-11-07 15:09:01.674000', 67.00, 'JavaScript'),
++	('Steve McConnell', '2017-11-07 15:09:01.674000', 58.00, 'Code complete'),
++	('Martin Fowler e Kent Beck', '2017-11-07 15:09:01.674000', 88.00, 'Refactoring'),
++	('Eric Freeman, Elisabeth Freeman, Kathy Sierra, Bert Bates', '2017-11-07 15:09:01.674000', 110.00, 'Head First Design Patterns'),
++	('Eric Evans', '2017-11-07 15:09:01.674000', 92.00, 'Domain Driven Design'),
++	('Brian Goetz e Tim Peierls', '2017-11-07 15:09:01.674000', 80.00, 'Java Concurrency in Practice'),
++	('Susan Cain', '2017-11-07 15:09:01.674000', 123.00, 'O poder dos quietos'),
++	('Roger S. Pressman', '2017-11-07 15:09:01.674000', 56.00, 'Engenharia de Software: uma abordagem profissional'),
++	('Viktor Mayer-Schonberger e Kenneth Kukier', '2017-11-07 15:09:01.674000', 54.00, 'Big Data: como extrair volume, variedade, velocidade e valor da avalanche de informação cotidiana'),
++	('Richard Hunter e George Westerman', '2017-11-07 15:09:01.674000', 95.00, 'O verdadeiro valor de TI'),
++	('Marc J. Schiller', '2017-11-07 15:09:01.674000', 45.00, 'Os 11 segredos de líderes de TI altamente influentes'),
++	('Aguinaldo Aragon Fernandes e Vladimir Ferraz de Abreu', '2017-11-07 15:09:01.674000', 54.00, 'Implantando a governança de TI');
+\ Nenhum caractere de nova linha no final do arquivo
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/main/resources/db/migration/V2__Populate_Table_Person.sql 12-swagger-openapi/challenge-2-unit-tests-books/src/main/resources/db/migration/V2__Populate_Table_Person.sql
+--- 12-swagger-openapi/base/src/main/resources/db/migration/V2__Populate_Table_Person.sql	2026-11-19 10:11:33.277709789 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/main/resources/db/migration/V2__Populate_Table_Person.sql	1969-12-31 21:00:00.000000000 -0300
+@@ -1,2 +0,0 @@
+-INSERT INTO `person` (address,first_name,gender,last_name) VALUES
+-	 ('Moradas do Bosque','Leandro','Male','Pereira');
+\ Nenhum caractere de nova linha no final do arquivo
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/test/java/com/udemy/spring_boot/services/BookServicesTest.java 12-swagger-openapi/challenge-2-unit-tests-books/src/test/java/com/udemy/spring_boot/services/BookServicesTest.java
+--- 12-swagger-openapi/base/src/test/java/com/udemy/spring_boot/services/BookServicesTest.java	1969-12-31 21:00:00.000000000 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/test/java/com/udemy/spring_boot/services/BookServicesTest.java	2026-11-19 10:11:33.284801869 -0300
+@@ -0,0 +1,287 @@
++package com.udemy.spring_boot.services;
++
++import com.udemy.spring_boot.data.dto.BookDTO;
++import com.udemy.spring_boot.exception.RequiredObjectIsNullException;
++import com.udemy.spring_boot.model.Book;
++import com.udemy.spring_boot.repository.BookRepository;
++
++import static org.junit.jupiter.api.Assertions.*;
++import static org.mockito.Mockito.*;
++
++import com.udemy.spring_boot.unittests.mapper.mocks.MockBook;
++import org.junit.jupiter.api.BeforeEach;
++import org.junit.jupiter.api.Test;
++import org.junit.jupiter.api.TestInstance;
++import org.junit.jupiter.api.extension.ExtendWith;
++import org.mockito.InjectMocks;
++import org.mockito.Mock;
++import org.mockito.MockitoAnnotations;
++import org.mockito.junit.jupiter.MockitoExtension;
++
++import java.util.Date;
++import java.util.List;
++import java.util.Optional;
++
++@TestInstance(TestInstance.Lifecycle.PER_CLASS) // objetos instanciados vao durar apenas para essa classe
++@ExtendWith(MockitoExtension.class)
++class BookServicesTest {
++// Verificar a classe MockBook para entender essa classe
++
++    MockBook input;
++
++    @InjectMocks
++    private BookServices bookServices;
++
++    @Mock // tipo autowired, mas quem cuida é o mockito
++    BookRepository bookRepository;
++
++    @BeforeEach
++    void setUp() {
++        input = new MockBook();
++        MockitoAnnotations.openMocks(this);
++    }
++
++    @Test
++    void create() {
++        Book book = input.mockEntity(1);
++        Book persisted = book;
++        persisted.setId(1L);
++
++        BookDTO bookDTO = input.mockDTO(1);
++
++        when(bookRepository.save(any(Book.class))).thenReturn(persisted);
++
++        var result = bookServices.create(bookDTO);
++
++        assertNotNull(result);
++        assertNotNull(result.getId());
++        assertNotNull(result.getLinks());
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("self")
++                        && link.getHref().endsWith("/api/books/v1/1")
++                        && link.getType().equals("GET")
++                ));
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("findAll")
++                        && link.getHref().endsWith("/api/books/v1")
++                        && link.getType().equals("GET")
++                ));
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("create")
++                        && link.getHref().endsWith("/api/books/v1")
++                        && link.getType().equals("POST")
++                ));
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("update")
++                        && link.getHref().endsWith("/api/books/v1")
++                        && link.getType().equals("PUT")
++                ));
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("delete")
++                        && link.getHref().endsWith("/api/books/v1/1")
++                        && link.getType().equals("DELETE")
++                ));
++
++        assertEquals("Author Test1", result.getAuthor());
++        assertEquals(new Date(1950, 0, 2), result.getLaunchDate());
++        assertEquals(10.0, result.getPrice());
++        assertEquals("Title Test1", result.getTitle());
++    }
++
++    @Test
++    void testCreateWithNullBook() {
++        Exception exception = assertThrows(RequiredObjectIsNullException.class,
++                () -> {
++                    bookServices.create(null);
++                });
++
++        String expectedMessage = "It is not allowed to persist a null object";
++        String actualMessage = exception.getMessage();
++
++        assertTrue(actualMessage.contains(expectedMessage));
++    }
++
++    @Test
++    void findAll() {
++        List<Book> list = input.mockEntityList();
++        when(bookRepository.findAll()).thenReturn(list);
++        List<BookDTO> books = bookServices.findAll();
++
++        assertNotNull(books);
++        assertEquals(14, books.size());
++
++        for (int i = 0; i < books.size(); i+=3){
++            var book = books.get(i);
++
++            assertNotNull(book);
++            assertNotNull(book.getId());
++            assertNotNull(book.getLinks());
++
++            assertNotNull(book.getLinks().stream()
++                    .anyMatch(link -> link.getRel().value().equals("self")
++                            && link.getHref().endsWith("/api/books/v1/" + book.getId())
++                            && link.getType().equals("GET")
++                    ));
++
++            assertNotNull(book.getLinks().stream()
++                    .anyMatch(link -> link.getRel().value().equals("findAll")
++                            && link.getHref().endsWith("/api/books/v1")
++                            && link.getType().equals("GET")
++                    ));
++
++            assertNotNull(book.getLinks().stream()
++                    .anyMatch(link -> link.getRel().value().equals("create")
++                            && link.getHref().endsWith("/api/books/v1")
++                            && link.getType().equals("POST")
++                    ));
++
++            assertNotNull(book.getLinks().stream()
++                    .anyMatch(link -> link.getRel().value().equals("update")
++                            && link.getHref().endsWith("/api/books/v1")
++                            && link.getType().equals("PUT")
++                    ));
++
++            assertNotNull(book.getLinks().stream()
++                    .anyMatch(link -> link.getRel().value().equals("delete")
++                            && link.getHref().endsWith("/api/books/v1/" + book.getId())
++                            && link.getType().equals("DELETE")
++                    ));
++
++            assertEquals("Author Test" + i, book.getAuthor());
++            assertEquals(new Date(1950, 0, i + 1), book.getLaunchDate());
++            assertEquals(10.0 * i, book.getPrice());
++            assertEquals("Title Test" + i, book.getTitle());
++        }
++    }
++
++    @Test
++    void findById() {
++        Book book = input.mockEntity(1);
++        book.setId(1L);
++        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
++
++        var result = bookServices.findById(1L);
++
++        assertNotNull(result);
++        assertNotNull(result.getId());
++        assertNotNull(result.getLinks());
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("self")
++                        && link.getHref().endsWith("/api/book/v1/1")
++                        && link.getType().equals("GET")
++                ));
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("findAll")
++                        && link.getHref().endsWith("/api/book/v1")
++                        && link.getType().equals("GET")
++                ));
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("create")
++                        && link.getHref().endsWith("/api/book/v1")
++                        && link.getType().equals("POST")
++                ));
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("update")
++                        && link.getHref().endsWith("/api/book/v1")
++                        && link.getType().equals("PUT")
++                ));
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("delete")
++                        && link.getHref().endsWith("/api/book/v1/1")
++                        && link.getType().equals("DELETE")
++                ));
++
++        assertEquals("Author Test1", result.getAuthor());
++        assertEquals(new Date(1950, 0, 2), result.getLaunchDate());
++        assertEquals(10.0, result.getPrice());
++        assertEquals("Title Test1", result.getTitle());
++    }
++
++    @Test
++    void update() {
++        Book book = input.mockEntity(1);
++        Book persisted = book;
++        persisted.setId(1L);
++
++        BookDTO bookDTO = input.mockDTO(1);
++
++        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
++        when(bookRepository.save(book)).thenReturn(persisted);
++
++        var result = bookServices.update(bookDTO);
++
++        assertNotNull(result);
++        assertNotNull(result.getId());
++        assertNotNull(result.getLinks());
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("self")
++                        && link.getHref().endsWith("/api/books/v1/1")
++                        && link.getType().equals("GET")
++                ));
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("findAll")
++                        && link.getHref().endsWith("/api/books/v1")
++                        && link.getType().equals("GET")
++                ));
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("create")
++                        && link.getHref().endsWith("/api/books/v1")
++                        && link.getType().equals("POST")
++                ));
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("update")
++                        && link.getHref().endsWith("/api/books/v1")
++                        && link.getType().equals("PUT")
++                ));
++
++        assertNotNull(result.getLinks().stream()
++                .anyMatch(link -> link.getRel().value().equals("delete")
++                        && link.getHref().endsWith("/api/books/v1/1")
++                        && link.getType().equals("DELETE")
++                ));
++
++        assertEquals("Author Test1", result.getAuthor());
++        assertEquals(new Date(1950, 0, 2), result.getLaunchDate());
++        assertEquals(20.0, result.getPrice());
++        assertEquals("Title Test1", result.getTitle());
++    }
++
++    @Test
++    void testUpdateWithNullBook() {
++        Exception exception = assertThrows(RequiredObjectIsNullException.class,
++                () -> {
++                    bookServices.update(null);
++                });
++
++        String expectedMessage = "It is not allowed to persist a null object";
++        String actualMessage = exception.getMessage();
++
++        assertTrue(actualMessage.contains(expectedMessage));
++    }
++
++    @Test
++    void delete() {
++        Book book = input.mockEntity(1);
++        book.setId(1L);
++        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
++
++        bookServices.delete(1L);
++        verify(bookRepository, times(1)).findById(anyLong());
++        verify(bookRepository, times(1)).delete(any(Book.class));
++        verifyNoMoreInteractions(bookRepository);
++    }
++}
+\ Nenhum caractere de nova linha no final do arquivo
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/test/java/com/udemy/spring_boot/services/PersonServicesTest.java 12-swagger-openapi/challenge-2-unit-tests-books/src/test/java/com/udemy/spring_boot/services/PersonServicesTest.java
+--- 12-swagger-openapi/base/src/test/java/com/udemy/spring_boot/services/PersonServicesTest.java	2026-11-19 10:11:33.278029016 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/test/java/com/udemy/spring_boot/services/PersonServicesTest.java	1969-12-31 21:00:00.000000000 -0300
+@@ -1,292 +0,0 @@
+-package com.udemy.spring_boot.services;
+-
+-import com.udemy.spring_boot.data.dto.PersonDTO;
+-import com.udemy.spring_boot.exception.RequiredObjectIsNullException;
+-import com.udemy.spring_boot.model.Person;
+-import com.udemy.spring_boot.repository.PersonRepository;
+-
+-import static org.junit.jupiter.api.Assertions.*;
+-import static org.mockito.Mockito.*;
+-
+-import com.udemy.spring_boot.unittests.mapper.mocks.MockPerson;
+-import org.junit.jupiter.api.BeforeEach;
+-import org.junit.jupiter.api.Test;
+-import org.junit.jupiter.api.TestInstance;
+-import org.junit.jupiter.api.extension.ExtendWith;
+-import org.mockito.InjectMocks;
+-import org.mockito.Mock;
+-import org.mockito.MockitoAnnotations;
+-import org.mockito.junit.jupiter.MockitoExtension;
+-
+-import java.util.List;
+-import java.util.Optional;
+-
+-@TestInstance(TestInstance.Lifecycle.PER_CLASS) // objetos instanciados vao durar apenas para essa classe
+-@ExtendWith(MockitoExtension.class)
+-class PersonServicesTest {
+-// Verificar a classe MockPerson para entender essa classe
+-
+-    MockPerson input;
+-
+-    @InjectMocks
+-    private PersonServices personServices;
+-
+-    @Mock // tipo autowired, mas quem cuida é o mockito
+-    PersonRepository personRepository;
+-
+-    @BeforeEach
+-    void setUp() {
+-        input = new MockPerson();
+-        MockitoAnnotations.openMocks(this);
+-    }
+-
+-    @Test
+-    void create() {
+-        Person person = input.mockEntity(1);
+-        Person persisted = person;
+-        persisted.setId(1L);
+-
+-        PersonDTO personDTO = input.mockDTO(1);
+-
+-        when(personRepository.save(person)).thenReturn(persisted);
+-
+-        var result = personServices.create(personDTO);
+-
+-        assertNotNull(result);
+-        assertNotNull(result.getId());
+-        assertNotNull(result.getLinks());
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("self")
+-                        && link.getHref().endsWith("/api/person/v1/1")
+-                        && link.getType().equals("GET")
+-                ));
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("findAll")
+-                        && link.getHref().endsWith("/api/person/v1")
+-                        && link.getType().equals("GET")
+-                ));
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("create")
+-                        && link.getHref().endsWith("/api/person/v1")
+-                        && link.getType().equals("POST")
+-                ));
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("update")
+-                        && link.getHref().endsWith("/api/person/v1")
+-                        && link.getType().equals("PUT")
+-                ));
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("delete")
+-                        && link.getHref().endsWith("/api/person/v1/1")
+-                        && link.getType().equals("DELETE")
+-                ));
+-
+-        assertEquals("First Name Test1", result.getFirstName());
+-        assertEquals("Last Name Test1", result.getLastName());
+-        assertEquals("Address Test1", result.getAddress());
+-        assertEquals("Female", result.getGender());
+-    }
+-
+-    @Test
+-    void testCreateWithNullPerson() {
+-        Exception exception = assertThrows(RequiredObjectIsNullException.class,
+-                () -> {
+-                    personServices.create(null);
+-                });
+-
+-        String expectedMessage = "It is not allowed to persist a null object";
+-        String actualMessage = exception.getMessage();
+-
+-        assertTrue(actualMessage.contains(expectedMessage));
+-    }
+-
+-    @Test
+-    void findAll() {
+-        List<Person> list = input.mockEntityList();
+-        when(personRepository.findAll()).thenReturn(list);
+-        List<PersonDTO> people = personServices.findAll();
+-
+-        assertNotNull(people);
+-        assertEquals(14, people.size());
+-
+-        // o professor triplicou o código nessa parte, fiz um laço com pequenos ajustes por conta
+-        for (int i = 0; i < people.size(); i+=3){
+-            var person = people.get(i);
+-
+-//        var personOne = people.get(1);
+-
+-        assertNotNull(person);
+-        assertNotNull(person.getId());
+-        assertNotNull(person.getLinks());
+-
+-        assertNotNull(person.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("self")
+-                        && link.getHref().endsWith("/api/person/v1/" + person.getId())
+-                        && link.getType().equals("GET")
+-                ));
+-
+-        assertNotNull(person.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("findAll")
+-                        && link.getHref().endsWith("/api/person/v1")
+-                        && link.getType().equals("GET")
+-                ));
+-
+-        assertNotNull(person.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("create")
+-                        && link.getHref().endsWith("/api/person/v1")
+-                        && link.getType().equals("POST")
+-                ));
+-
+-        assertNotNull(person.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("update")
+-                        && link.getHref().endsWith("/api/person/v1")
+-                        && link.getType().equals("PUT")
+-                ));
+-
+-        assertNotNull(person.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("delete")
+-                        && link.getHref().endsWith("/api/person/v1/" + person.getId())
+-                        && link.getType().equals("DELETE")
+-                ));
+-
+-        assertEquals("First Name Test" + person.getId(), person.getFirstName());
+-        assertEquals("Last Name Test" + person.getId(), person.getLastName());
+-        assertEquals("Address Test" + person.getId(), person.getAddress());
+-        String expectedGender = (person.getId() % 2 == 0) ? "Male" : "Female";
+-        assertEquals(expectedGender, person.getGender());
+-
+-//        assertEquals("Female", person.getGender());
+-        }
+-    }
+-
+-    @Test
+-    void findById() {
+-        Person person = input.mockEntity(1);
+-        person.setId(1L);
+-        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
+-
+-        var result = personServices.findById(1L);
+-
+-        assertNotNull(result);
+-        assertNotNull(result.getId());
+-        assertNotNull(result.getLinks());
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("self")
+-                    && link.getHref().endsWith("/api/person/v1/1")
+-                    && link.getType().equals("GET")
+-                ));
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("findAll")
+-                    && link.getHref().endsWith("/api/person/v1")
+-                    && link.getType().equals("GET")
+-                ));
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("create")
+-                        && link.getHref().endsWith("/api/person/v1")
+-                        && link.getType().equals("POST")
+-                ));
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("update")
+-                        && link.getHref().endsWith("/api/person/v1")
+-                        && link.getType().equals("PUT")
+-                ));
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("delete")
+-                        && link.getHref().endsWith("/api/person/v1/1")
+-                        && link.getType().equals("DELETE")
+-                ));
+-
+-        assertEquals("First Name Test1", result.getFirstName());
+-        assertEquals("Last Name Test1", result.getLastName());
+-        assertEquals("Address Test1", result.getAddress());
+-        assertEquals("Female", result.getGender());
+-    }
+-
+-    @Test
+-    void update() {
+-        Person person = input.mockEntity(1);
+-        Person persisted = person;
+-        persisted.setId(1L);
+-
+-        PersonDTO personDTO = input.mockDTO(1);
+-
+-        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
+-        when(personRepository.save(person)).thenReturn(persisted);
+-
+-        var result = personServices.update(personDTO);
+-
+-        assertNotNull(result);
+-        assertNotNull(result.getId());
+-        assertNotNull(result.getLinks());
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("self")
+-                        && link.getHref().endsWith("/api/person/v1/1")
+-                        && link.getType().equals("GET")
+-                ));
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("findAll")
+-                        && link.getHref().endsWith("/api/person/v1")
+-                        && link.getType().equals("GET")
+-                ));
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("create")
+-                        && link.getHref().endsWith("/api/person/v1")
+-                        && link.getType().equals("POST")
+-                ));
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("update")
+-                        && link.getHref().endsWith("/api/person/v1")
+-                        && link.getType().equals("PUT")
+-                ));
+-
+-        assertNotNull(result.getLinks().stream()
+-                .anyMatch(link -> link.getRel().value().equals("delete")
+-                        && link.getHref().endsWith("/api/person/v1/1")
+-                        && link.getType().equals("DELETE")
+-                ));
+-
+-        assertEquals("First Name Test1", result.getFirstName());
+-        assertEquals("Last Name Test1", result.getLastName());
+-        assertEquals("Address Test1", result.getAddress());
+-        assertEquals("Female", result.getGender());
+-    }
+-
+-    @Test
+-    void testUpdateWithNullPerson() {
+-        Exception exception = assertThrows(RequiredObjectIsNullException.class,
+-                () -> {
+-                    personServices.update(null);
+-                });
+-
+-        String expectedMessage = "It is not allowed to persist a null object";
+-        String actualMessage = exception.getMessage();
+-
+-        assertTrue(actualMessage.contains(expectedMessage));
+-    }
+-
+-    @Test
+-    void delete() {
+-        Person person = input.mockEntity(1);
+-        person.setId(1L);
+-        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
+-
+-        personServices.delete(1L);
+-        verify(personRepository, times(1)).findById(anyLong());
+-        verify(personRepository, times(1)).delete(any(Person.class));
+-        verifyNoMoreInteractions(personRepository);
+-    }
+-}
+\ Nenhum caractere de nova linha no final do arquivo
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/test/java/com/udemy/spring_boot/unittests/mapper/mocks/MockBook.java 12-swagger-openapi/challenge-2-unit-tests-books/src/test/java/com/udemy/spring_boot/unittests/mapper/mocks/MockBook.java
+--- 12-swagger-openapi/base/src/test/java/com/udemy/spring_boot/unittests/mapper/mocks/MockBook.java	1969-12-31 21:00:00.000000000 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/test/java/com/udemy/spring_boot/unittests/mapper/mocks/MockBook.java	2026-11-19 10:11:33.285183253 -0300
+@@ -0,0 +1,56 @@
++package com.udemy.spring_boot.unittests.mapper.mocks;
++
++import java.util.ArrayList;
++import java.util.Date;
++import java.util.List;
++
++import com.udemy.spring_boot.data.dto.BookDTO;
++import com.udemy.spring_boot.model.Book;
++
++public class MockBook {
++
++    public Book mockEntity() {
++        return mockEntity(0);
++    }
++
++    public BookDTO mockDTO() {
++        return mockDTO(0);
++    }
++
++    public List<Book> mockEntityList() {
++        List<Book> books = new ArrayList<Book>();
++        for (int i = 0; i < 14; i++) {
++            books.add(mockEntity(i));
++        }
++        return books;
++    }
++
++    public List<BookDTO> mockDTOList() {
++        List<BookDTO> books = new ArrayList<>();
++        for (int i = 0; i < 14; i++) {
++            books.add(mockDTO(i));
++        }
++        return books;
++    }
++
++    public Book mockEntity(Integer number) {
++        Book book = new Book();
++        book.setId(number.longValue());
++        book.setAuthor("Author Test" + number);
++        book.setLaunchDate(new Date(1950, 0, 1 + number));
++        book.setPrice(10.0 * number);
++        book.setTitle("Title Test" + number);
++        return book;
++    }
++
++    public BookDTO mockDTO(Integer number) {
++        BookDTO book = new BookDTO();
++        book.setId(number.longValue());
++        book.setAuthor("Author Test" + number);
++        book.setLaunchDate(new Date(1950, 0, 1 + number));
++        book.setPrice(10.0 * (1 + number));
++        book.setTitle("Title Test" + number);
++        return book;
++    }
++
++}
+\ Nenhum caractere de nova linha no final do arquivo
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/test/java/com/udemy/spring_boot/unittests/mapper/mocks/MockPerson.java 12-swagger-openapi/challenge-2-unit-tests-books/src/test/java/com/udemy/spring_boot/unittests/mapper/mocks/MockPerson.java
+--- 12-swagger-openapi/base/src/test/java/com/udemy/spring_boot/unittests/mapper/mocks/MockPerson.java	2026-11-19 10:11:33.278408305 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/test/java/com/udemy/spring_boot/unittests/mapper/mocks/MockPerson.java	1969-12-31 21:00:00.000000000 -0300
+@@ -1,55 +0,0 @@
+-package com.udemy.spring_boot.unittests.mapper.mocks;
+-
+-import java.util.ArrayList;
+-import java.util.List;
+-
+-import com.udemy.spring_boot.data.dto.PersonDTO;
+-import com.udemy.spring_boot.model.Person;
+-
+-public class MockPerson {
+-
+-    public Person mockEntity() {
+-        return mockEntity(0);
+-    }
+-
+-    public PersonDTO mockDTO() {
+-        return mockDTO(0);
+-    }
+-
+-    public List<Person> mockEntityList() {
+-        List<Person> persons = new ArrayList<Person>();
+-        for (int i = 0; i < 14; i++) {
+-            persons.add(mockEntity(i));
+-        }
+-        return persons;
+-    }
+-
+-    public List<PersonDTO> mockDTOList() {
+-        List<PersonDTO> persons = new ArrayList<>();
+-        for (int i = 0; i < 14; i++) {
+-            persons.add(mockDTO(i));
+-        }
+-        return persons;
+-    }
+-
+-    public Person mockEntity(Integer number) {
+-        Person person = new Person();
+-        person.setAddress("Address Test" + number);
+-        person.setFirstName("First Name Test" + number);
+-        person.setGender(((number % 2)==0) ? "Male" : "Female");
+-        person.setId(number.longValue());
+-        person.setLastName("Last Name Test" + number);
+-        return person;
+-    }
+-
+-    public PersonDTO mockDTO(Integer number) {
+-        PersonDTO person = new PersonDTO();
+-        person.setAddress("Address Test" + number);
+-        person.setFirstName("First Name Test" + number);
+-        person.setGender(((number % 2)==0) ? "Male" : "Female");
+-        person.setId(number.longValue());
+-        person.setLastName("Last Name Test" + number);
+-        return person;
+-    }
+-
+-}
+\ Nenhum caractere de nova linha no final do arquivo
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/test/java/com/udemy/spring_boot/unittests/mapper/ObjectMapperTests.java 12-swagger-openapi/challenge-2-unit-tests-books/src/test/java/com/udemy/spring_boot/unittests/mapper/ObjectMapperTests.java
+--- 12-swagger-openapi/base/src/test/java/com/udemy/spring_boot/unittests/mapper/ObjectMapperTests.java	2026-11-19 10:11:33.278277639 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/test/java/com/udemy/spring_boot/unittests/mapper/ObjectMapperTests.java	2026-11-19 10:11:33.284987537 -0300
+@@ -4,96 +4,96 @@
+ import static com.udemy.spring_boot.mapper.ObjectMapper.parseObject;
+ import static org.junit.jupiter.api.Assertions.assertEquals;
+ 
++import java.util.Date;
+ import java.util.List;
+ 
+-import com.udemy.spring_boot.data.dto.PersonDTO;
+-import com.udemy.spring_boot.unitetests.mapper.mocks.MockPerson;
++import com.udemy.spring_boot.data.dto.BookDTO;
++import com.udemy.spring_boot.model.Book;
++import com.udemy.spring_boot.unittests.mapper.mocks.MockBook;
+ import org.junit.jupiter.api.BeforeEach;
+ import org.junit.jupiter.api.Test;
+ 
+-import com.udemy.spring_boot.model.Person;
+-
+ public class ObjectMapperTests {
+-    MockPerson inputObject;
++    MockBook inputObject;
+ 
+     @BeforeEach
+     public void setUp() {
+-        inputObject = new MockPerson();
++        inputObject = new MockBook();
+     }
+ 
+     @Test
+     public void parseEntityToDTOTest() {
+-        PersonDTO output = parseObject(inputObject.mockEntity(), PersonDTO.class);
++        BookDTO output = parseObject(inputObject.mockEntity(), BookDTO.class);
+         assertEquals(Long.valueOf(0L), output.getId());
+-        assertEquals("First Name Test0", output.getFirstName());
+-        assertEquals("Last Name Test0", output.getLastName());
+-        assertEquals("Address Test0", output.getAddress());
+-        assertEquals("Male", output.getGender());
++        assertEquals("Author Test0", output.getAuthor());
++        assertEquals(new Date(1950, 0, 1), output.getLaunchDate());
++        assertEquals(10.0, output.getPrice());
++        assertEquals("Title Test0", output.getTitle());
+     }
+ 
+     @Test
+     public void parseEntityListToDTOListTest() {
+-        List<PersonDTO> outputList = parseListObjects(inputObject.mockEntityList(), PersonDTO.class);
+-        PersonDTO outputZero = outputList.get(0);
++        List<BookDTO> outputList = parseListObjects(inputObject.mockEntityList(), BookDTO.class);
++        BookDTO outputZero = outputList.get(0);
+ 
+         assertEquals(Long.valueOf(0L), outputZero.getId());
+-        assertEquals("First Name Test0", outputZero.getFirstName());
+-        assertEquals("Last Name Test0", outputZero.getLastName());
+-        assertEquals("Address Test0", outputZero.getAddress());
+-        assertEquals("Male", outputZero.getGender());
++        assertEquals("Author Test0", outputZero.getAuthor());
++        assertEquals(new Date(1950, 0, 1), outputZero.getLaunchDate());
++        assertEquals(10.0, outputZero.getPrice());
++        assertEquals("Title Test0", outputZero.getTitle());
+ 
+-        PersonDTO outputSeven = outputList.get(7);
++        BookDTO outputSeven = outputList.get(7);
+ 
+         assertEquals(Long.valueOf(7L), outputSeven.getId());
+-        assertEquals("First Name Test7", outputSeven.getFirstName());
+-        assertEquals("Last Name Test7", outputSeven.getLastName());
+-        assertEquals("Address Test7", outputSeven.getAddress());
+-        assertEquals("Female", outputSeven.getGender());
++        assertEquals("Author Test7", outputSeven.getAuthor());
++        assertEquals(new Date(1950, 0, 7), outputSeven.getLaunchDate());
++        assertEquals(70.0, outputSeven.getPrice());
++        assertEquals("Title Test7", outputSeven.getTitle());
+ 
+-        PersonDTO outputTwelve = outputList.get(12);
++        BookDTO outputTwelve = outputList.get(12);
+ 
+         assertEquals(Long.valueOf(12L), outputTwelve.getId());
+-        assertEquals("First Name Test12", outputTwelve.getFirstName());
+-        assertEquals("Last Name Test12", outputTwelve.getLastName());
+-        assertEquals("Address Test12", outputTwelve.getAddress());
+-        assertEquals("Male", outputTwelve.getGender());
++        assertEquals("Author Test12", outputTwelve.getAuthor());
++        assertEquals(new Date(1950, 0, 12), outputTwelve.getLaunchDate());
++        assertEquals(120.0, outputTwelve.getPrice());
++        assertEquals("Title Test12", outputTwelve.getTitle());
+     }
+ 
+     @Test
+     public void parseDTOToEntityTest() {
+-        Person output = parseObject(inputObject.mockDTO(), Person.class);
++        Book output = parseObject(inputObject.mockDTO(), Book.class);
+         assertEquals(Long.valueOf(0L), output.getId());
+-        assertEquals("First Name Test0", output.getFirstName());
+-        assertEquals("Last Name Test0", output.getLastName());
+-        assertEquals("Address Test0", output.getAddress());
+-        assertEquals("Male", output.getGender());
++        assertEquals("Author Test0", output.getAuthor());
++        assertEquals(new Date(1950, 0, 1), output.getLaunchDate());
++        assertEquals(10.0, output.getPrice());
++        assertEquals("Title Test0", output.getTitle());
+     }
+ 
+     @Test
+     public void parserDTOListToEntityListTest() {
+-        List<Person> outputList = parseListObjects(inputObject.mockDTOList(), Person.class);
+-        Person outputZero = outputList.get(0);
++        List<Book> outputList = parseListObjects(inputObject.mockDTOList(), Book.class);
++        Book outputZero = outputList.get(0);
+ 
+         assertEquals(Long.valueOf(0L), outputZero.getId());
+-        assertEquals("First Name Test0", outputZero.getFirstName());
+-        assertEquals("Last Name Test0", outputZero.getLastName());
+-        assertEquals("Address Test0", outputZero.getAddress());
+-        assertEquals("Male", outputZero.getGender());
++        assertEquals("Author Test0", outputZero.getAuthor());
++        assertEquals(new Date(1950, 0, 1), outputZero.getLaunchDate());
++        assertEquals(10.0, outputZero.getPrice());
++        assertEquals("Title Test0", outputZero.getTitle());
+ 
+-        Person outputSeven = outputList.get(7);
++        Book outputSeven = outputList.get(7);
+ 
+         assertEquals(Long.valueOf(7L), outputSeven.getId());
+-        assertEquals("First Name Test7", outputSeven.getFirstName());
+-        assertEquals("Last Name Test7", outputSeven.getLastName());
+-        assertEquals("Address Test7", outputSeven.getAddress());
+-        assertEquals("Female", outputSeven.getGender());
++        assertEquals("Author Test7", outputSeven.getAuthor());
++        assertEquals(new Date(1950, 0, 7), outputSeven.getLaunchDate());
++        assertEquals(70.0, outputSeven.getPrice());
++        assertEquals("Title Test7", outputSeven.getTitle());
+ 
+-        Person outputTwelve = outputList.get(12);
++        Book outputTwelve = outputList.get(12);
+ 
+         assertEquals(Long.valueOf(12L), outputTwelve.getId());
+-        assertEquals("First Name Test12", outputTwelve.getFirstName());
+-        assertEquals("Last Name Test12", outputTwelve.getLastName());
+-        assertEquals("Address Test12", outputTwelve.getAddress());
+-        assertEquals("Male", outputTwelve.getGender());
++        assertEquals("Author Test12", outputTwelve.getAuthor());
++        assertEquals(new Date(1950, 0, 12), outputTwelve.getLaunchDate());
++        assertEquals(120.0, outputTwelve.getPrice());
++        assertEquals("Title Test12", outputTwelve.getTitle());
+     }
+ }
+\ Nenhum caractere de nova linha no final do arquivo
+diff -ruN '--exclude=target' '--exclude=collections' '--exclude=docker-compose.yml' 12-swagger-openapi/base/src/test/resources/application.yml 12-swagger-openapi/challenge-2-unit-tests-books/src/test/resources/application.yml
+--- 12-swagger-openapi/base/src/test/resources/application.yml	2026-11-19 10:11:33.278408305 -0300
++++ 12-swagger-openapi/challenge-2-unit-tests-books/src/test/resources/application.yml	2026-11-19 10:11:33.285183253 -0300
+@@ -3,17 +3,24 @@
+     name: spring-boot
+   datasource:
+     driver-class-name: com.mysql.cj.jdbc.Driver
+-    url: jdbc:mysql://localhost:3308/spring_boot?useTimezone=true&serverTimezone=UTC
++    url: jdbc:mysql://localhost:3308/spring_boot_challenge_2?useTimezone=true&serverTimezone=UTC
+     username: root
+-    # Sei que é uma má prática deixar senha exposta
++    #     Sei que é uma má prática deixar senha exposta
+     password: root
+   jpa:
+     hibernate:
+-      ddl-auto: update
++      ddl-auto: none # Precisa desabilitar para usar migration
+     properties:
+       hibernate:
++      #        dialect: org.hibernate.dialect.MySQLDialect
+       show-sql: false
+     open-in-view: false
+   logging:
+     level:
++      # níveis: TRACE, DEBUG, WARN, INFO
++      #      root: WARN
+       com.udemy.spring_boot: DEBUG
++  springdoc:
++    paths-to-match: /api/**/v1/** # ** substitui o nome do controller e o id
++    swagger-ui:
++      use-root-path: true
+\ Nenhum caractere de nova linha no final do arquivo
